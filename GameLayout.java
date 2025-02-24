@@ -1,9 +1,10 @@
 import javafx.scene.layout.*;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import java.util.Random;
+import javafx.scene.input.MouseEvent;
+import javafx.event.EventHandler;
 
 /**
  * Write a description of class Round here.
@@ -11,7 +12,7 @@ import java.util.Random;
  * @author (your name)
  * @version (a version number or a date)
  */
-public class GameLayout extends Pane
+public class GameLayout extends StackPane
 {
     protected Logic gameLogic;
     private Random gen;
@@ -26,84 +27,39 @@ public class GameLayout extends Pane
         player = new Character();
         gameLogic = new Logic();
 
-        drawBridges(width, height);
-        this.getChildren().add(player);
+        drawBridgeAndPlayer(width, height);
         drawUI();
     }
     
-    private void drawBridges(double width, double height)
+    private void drawBridgeAndPlayer(double width, double height)
     {
-        // create bridge stack pane
-        StackPane bridges = new StackPane();
-        bridges.setPrefWidth(width);
-        bridges.setPrefHeight(height);
+        // Brdige and player container
+        StackPane container = new StackPane();
         
-        // Get round number
-        int roundNum = gameLogic.getRoundNum();
-        int glassPerRow=0;
-        String bridgeUrl = "";
-        double[] scale = {0,0,0};
-        double[] movement = {0,0,0};
+        // create player pane
+        Pane playerPane = new Pane();
+        playerPane.setMouseTransparent(true);
+        playerPane.setPrefWidth(width);
+        playerPane.setPrefHeight(height);
+        playerPane.getChildren().add(player);
         
-        switch(roundNum)
+        // create bride pane
+        Bridges bridgePane = new Bridges(width, height, gameLogic.getRoundNum());
+        bridgePane.setFunctions(new EventHandler<MouseEvent>() 
         {
-            case 1:
-                glassPerRow = 4;
-                break;
-            case 2:
-                glassPerRow = 3;
-                bridgeUrl = "./assets/images/round_2/bridge.png";
-                scale = new double[]{1.2,1,0.65};
-                movement = new double[]{-30, -15, 15};
-                break;
-            case 3:
-                glassPerRow = 2;
-                break;
-        }
-        
-        // Make glass bridge bg
-        ImageView bridgeImg = new ImageView(new Image(bridgeUrl));
-        
-        //Make container for glass rows
-        VBox glassContainer = new VBox();
-        
-        // Make glass rows
-        for (int i=3; i>0; i--)
-        {
-            HBox glassRow = new HBox(0);
-            for(int j=0; j<glassPerRow; j++)
+            @Override
+            public void handle(MouseEvent e) 
             {
-                Tile current = new Tile(roundNum, i-1, j, "regular", 0);
-                current.setOnMouseClicked(e -> {
-                    // check break risk
-                    boolean isBroken = gen.nextDouble() < current.getBreakRisk();
-                    
-                    gameLogic.setHasLost(isBroken);
-                    
-                    // move the character
-                    player.move(current.getCenterX(), current.getCenterY());
-                });
-                glassRow.getChildren().add(current);
+                Tile clicked = (Tile) e.getSource();
+                System.out.println("Tile clicked at: " + clicked.getCenterX() + ", " + clicked.getCenterY());
+                player.move(clicked.getCenterX(), clicked.getCenterY());
             }
-            
-            glassRow.setAlignment(Pos.CENTER);
-            
-            // scale down as it goes further
-            double scaleFactor = scale[i-1];
-            glassRow.setScaleX(scaleFactor);
-            glassRow.setScaleY(scaleFactor);
-            
-            // Adjust spacing dynamically for a perspective effect
-            glassRow.setTranslateY(movement[i-1]);
-
-            glassContainer.getChildren().add(glassRow);
-        }
-        glassContainer.setAlignment(Pos.BOTTOM_CENTER);
+        });
         
-        bridges.setAlignment(bridgeImg, Pos.BOTTOM_CENTER);
-        bridges.setAlignment(glassContainer, Pos.BOTTOM_CENTER);
-        bridges.getChildren().addAll(bridgeImg, glassContainer);
-        this.getChildren().add(bridges);
+        // add bridge pane and payer pane to contaner
+        container.getChildren().addAll(bridgePane, playerPane);
+        
+        this.getChildren().addAll(container);
     }
     
     private void drawUI()
