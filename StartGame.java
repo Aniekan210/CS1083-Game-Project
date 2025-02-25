@@ -18,8 +18,8 @@ public class StartGame extends Application
     {
         // Create a new grid pane
         Pane pane = new Pane();
-        double width = 600;
-        double height = 600;
+        double width = 500;
+        double height = 400;
         
         // Create Game Logic
         GameLayout layout = new GameLayout(width, height);

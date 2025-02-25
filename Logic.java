@@ -15,39 +15,48 @@ public class Logic
     
     public Logic()
     {
-        //roundNo = 1;
-        roundNo = 2;
-        rowNo = 1;
-        hasLost = false;
-        hasWon = false;
-        payout = 0;
+        reset();
     }
     
     // Mutator methods
     public void incRoundNum() 
     { 
         roundNo++;
-        rowNo = 1;
+        rowNo = 0;
         if (roundNo == 4) 
         { 
-            roundNo = 3;
+            hasWon = true;
+            reset();
         }
     }
-    public void incRowNo()
+    
+    public void incRowNum()
     {
         rowNo++;
         if (rowNo == 4)
         {
-            rowNo = 3;
+            rowNo = 0;
+            incRoundNum();
         }
     }
+    
     public void addPayout(int amount)
     {
         payout += amount;
     }
-    public void setHasLost(boolean value)
+    
+    public void lose()
     {
-        hasLost = value;
+        hasLost = true;
+    }
+    
+    public void reset()
+    {
+        roundNo = 1;
+        rowNo = 0;
+        hasLost = false;
+        hasWon = false;
+        payout = 0;
     }
     
     // Accessor methods

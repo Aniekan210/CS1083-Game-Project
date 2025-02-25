@@ -19,26 +19,28 @@ public class Bridges extends StackPane
     protected double[] scale;
     protected double[] movement;
     protected ArrayList<Tile> tiles;
+    protected EventHandler<MouseEvent> event;
     
-    public Bridges(double width, double height, int roundNum)
+    public Bridges(double width, double height, int roundNum, EventHandler<MouseEvent> event)
     {   
         // create bridge stack pane
         super();
         super.setPrefWidth(width);
         super.setPrefHeight(height);
         tiles = new ArrayList<Tile>();
+        this.event = event;
         
-        updateBridgeConstraints(roundNum);       
+        updateBridge(roundNum);       
     }
     
-    public void updateBridgeConstraints(int roundNum)
+    public void updateBridge(int roundNum)
     {
         switch(roundNum)
         {
             case 1:
                 glassPerRow = 4;
-                scale = new double[]{1.2,1,0.65};
-                movement = new double[]{-30, -15, 15};
+                scale = new double[]{1.1,0.9,0.7};
+                movement = new double[]{-70, -75, -60};
                 break;
             case 2:
                 glassPerRow = 3;
@@ -53,10 +55,13 @@ public class Bridges extends StackPane
         }
         bridgeUrl = String.format("./assets/images/round_%d/bridge.png", roundNum);
         drawBridge(roundNum);
+        setFunctions();
     }
     
     private void drawBridge(int roundNum)
     {
+        this.getChildren().clear();
+        
         // Make glass bridge bg
         ImageView bridgeImg = new ImageView(new Image(bridgeUrl));
         
@@ -93,12 +98,11 @@ public class Bridges extends StackPane
         this.getChildren().addAll(bridgeImg, glassContainer);
     }
     
-    public void setFunctions(EventHandler<MouseEvent> event)
+    private void setFunctions()
     {
         for (int i=0; i<tiles.size(); i++)
         {
             Tile current = tiles.get(i);
-            System.out.println("Binding event to tile " + i);
             current.setOnMouseClicked(event);
         }
     }

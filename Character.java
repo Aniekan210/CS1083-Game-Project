@@ -24,7 +24,7 @@ public class Character extends ImageView
         
         defaultImg = new Image("./assets/images/character.png");
         jumpingImg = new Image("./assets/images/character_jump.png");
-        super.setImage(defaultImg);
+        this.setImage(defaultImg);
         
         timeline = new Timeline();
     }
@@ -33,15 +33,14 @@ public class Character extends ImageView
     {
         timeline.getKeyFrames().clear();
 
-        // Ensure width and height are known
-        double pivotX = this.getLayoutBounds().getWidth() / 2;  // Center horizontally
-        double pivotY = this.getLayoutBounds().getHeight();    // Bottom center
+        double pivotX = this.getLayoutBounds().getWidth() / 2;  
+        double pivotY = this.getLayoutBounds().getHeight();  
 
-        KeyFrame xMovement = new KeyFrame(Duration.millis(500), new KeyValue(this.translateXProperty(), x - pivotX));
-        KeyFrame yMovement = new KeyFrame(Duration.millis(500), new KeyValue(this.translateYProperty(), y - pivotY));
+        KeyFrame xMovement = new KeyFrame(Duration.millis(200), new KeyValue(this.translateXProperty(), x - pivotX));
+        KeyFrame yMovement = new KeyFrame(Duration.millis(200), new KeyValue(this.translateYProperty(), y - pivotY));
 
         KeyFrame jumping = new KeyFrame(Duration.ZERO, e -> this.setImage(jumpingImg));
-        KeyFrame defaultS = new KeyFrame(Duration.millis(500), e -> this.setImage(defaultImg));
+        KeyFrame defaultS = new KeyFrame(Duration.millis(200), e -> this.setImage(defaultImg));
 
         timeline.getKeyFrames().addAll(xMovement, yMovement, jumping, defaultS);
         timeline.play();
