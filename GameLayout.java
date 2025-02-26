@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import java.util.Random;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Write a description of class Round here.
@@ -19,6 +18,9 @@ public class GameLayout extends StackPane
     private Random gen;
     protected Character player;
     protected Bridges bridgePane;
+    protected UILayer ui;
+    protected double width;
+    protected double height;
     
     public GameLayout(double width, double height)
     {
@@ -29,24 +31,27 @@ public class GameLayout extends StackPane
         player = new Character();
         gameLogic = new Logic();
 
-        drawBridgeAndPlayer(width, height);
+        this.width = width;
+        this.height = height;
+        
+        drawBridgeAndPlayer();
         drawUI();
     }
     
-    private void drawBridgeAndPlayer(double width, double height)
+    private void drawBridgeAndPlayer()
     {
         // Brdige and player container
         StackPane container = new StackPane();
         
         // create player pane
         Pane playerPane = new Pane();
-        playerPane.setPickOnBounds(false);
+        playerPane.setMouseTransparent(true);
         playerPane.setPrefWidth(width);
         playerPane.setPrefHeight(height);        
         playerPane.getChildren().add(player);        
         
         // create bride pane
-        bridgePane = new Bridges(width, height, gameLogic.getRoundNum(), 
+        bridgePane = new Bridges(width, height, gameLogic.getRoundNum(), gameLogic.getRoundPayout(), 
             new EventHandler<MouseEvent>() 
             {
                 @Override
@@ -66,30 +71,24 @@ public class GameLayout extends StackPane
                         // check if tile is broken
                         boolean isBroken = gen.nextDouble() < clicked.getBreakRisk();
                         if (isBroken)
-                        {
-                            // if yes 
-                            
+                        {                            
                             // update the tile image
+                            clicked.setImage("broken");
                         
                             // fail the player
+                            gameLogic.lose();
                         }
                         else
                         {
-                            // if not
-          
                             // check how many vbucks it has and add it to the payout
+                            gameLogic.addPayout(clicked.getPayout());
                             
-                            // update the image
+                            // update the image of the tile
+                            clicked.setImage("regular");
                         }
                     
                         // update the rowNum
                         gameLogic.incRowNum();
-                        if (gameLogic.getRowNum() == 3)
-                        {
-                            player.move(width/2, height-10);
-                            
-                            gameLogic.incRowNum();
-                        }
                     }
                                         
                     // Update the rest of the game
@@ -106,11 +105,15 @@ public class GameLayout extends StackPane
     
     private void drawUI()
     {
-        
+        ui = new UILayer(width, height);
+        this.getChildren().add(ui);
     }
      
     private void updateAll()
     {
-        bridgePane.updateBridge(gameLogic.getRoundNum());
+        ui.updateUI(gameLogic.getPayout());
+        
+        // add 
+        bridgePane.updateBridge(gameLogic.getRoundNum(), gameLogic.getRoundPayout());
     }
 }

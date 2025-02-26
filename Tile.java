@@ -9,21 +9,30 @@ import javafx.geometry.Bounds;
  ************************************************/
 public class Tile extends ImageView {
     protected int rowNum;
+    protected int rowPos;
+    protected int roundNum;
+    protected int pay;
     protected double breakRisk;
     protected boolean hasBroken;
 
-    public Tile(int roundNum, int rowNum, int rowPos, String state, double breakRisk) 
+    public Tile(int roundNum, int rowNum, int rowPos, int pay, double breakRisk) 
     {
         super();
         this.rowNum = rowNum;
+        this.rowPos = rowPos;
+        this.roundNum = roundNum;
         this.breakRisk = breakRisk;
-        setImage(state, rowPos, roundNum);
-    }
+        this.pay = pay;
+        String state = pay > 0 ? "money" : "regular";
+        setImage(state);
+    }     
 
-    public void setImage(String state, int rowPos, int roundNum) 
+    public void setImage(String state) 
     {
         String imgUrl = String.format("./assets/images/round_%d/%d_%s.png", roundNum, rowPos, state);
         super.setImage(new Image(imgUrl));
+        super.setPreserveRatio(true);
+        super.setFitWidth(200);
     }
 
     // Accessor methods
@@ -45,4 +54,6 @@ public class Tile extends ImageView {
     }
     
     public int getRowNum() { return rowNum; }
+    
+    public int getPayout() { return pay; }
 }
