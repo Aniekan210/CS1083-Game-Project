@@ -6,6 +6,9 @@ import javafx.geometry.Pos;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
 import java.util.Random;
+import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * Write a description of class Bridges here.
@@ -17,6 +20,7 @@ public class Bridges extends StackPane
 {
     protected int glassPerRow;
     protected String bridgeUrl;
+    protected String bgUrl;
     protected double[] scale;
     protected double[] movement;
     protected ArrayList<Tile> tiles;
@@ -24,6 +28,9 @@ public class Bridges extends StackPane
     protected Random gen;
     protected int roundNum;
     protected double spacing;
+    protected double width;
+    protected double height;
+    protected double vBucksChance;
     
     public Bridges(double width, double height, int roundNum, int roundPay, EventHandler<MouseEvent> event)
     {   
@@ -31,6 +38,8 @@ public class Bridges extends StackPane
         super();
         super.setPrefWidth(width);
         super.setPrefHeight(height);
+        this.width = width;
+        this.height = height;
         tiles = new ArrayList<Tile>();
         this.event = event;
         this.roundNum = 0;
@@ -45,42 +54,61 @@ public class Bridges extends StackPane
         {
             case 1:
                 glassPerRow = 4;
-                scale = new double[]{1.1,0.9,0.7};
+                scale = new double[]{0.5,0.5,0.5};
                 movement = new double[]{-70, -75, -60};
+                spacing = -10;
+                vBucksChance = 0;
                 break;
             case 2:
                 glassPerRow = 3;
                 scale = new double[]{1.2,1,0.65};
                 movement = new double[]{-30, -15, 15};
+                vBucksChance = 0.2;
                 break;
             case 3:
                 glassPerRow = 2;
-                scale = new double[]{0.814,0.62,0.48};
-                movement = new double[]{-49, 0, 67};
-                spacing = 4.2;
+                scale = new double[]{1.42,1.12,0.87};
+                movement = new double[]{-65, -38, 10};
+                spacing = -35;
+                vBucksChance = 0;
                 break;
         }
         bridgeUrl = String.format("./assets/images/round_%d/bridge.png", roundNum);
-        drawBridge(roundNum);
+        bgUrl = String.format("./assets/images/round_%d/bg.png", roundNum);
+        drawBridge(roundNum, roundPay);
     }
     
-    private void drawBridge(int roundNum)
+    private void drawBridge(int roundNum, int roundPay)
     {
         if(this.roundNum != roundNum)
         {
             tiles.clear();
             this.getChildren().clear();
+            
+            ImageView bg = new ImageView(new Image(bgUrl));
+            bg.setFitHeight(height);
+            bg.setFitWidth(width);
+            
+            Pane textPane = new Pane();
+            textPane.setMouseTransparent(true);
+            
+            Text roundPayText = new Text("+"+roundPay);
+            roundPayText.setFont(Font.font("Comic Sans MS", 28));
+            roundPayText.setFill(Color.WHITE);
+            roundPayText.setStroke(Color.BLACK);
+            roundPayText.setStrokeWidth(1);
+            roundPayText.setLayoutX(width/2 - roundPayText.getLayoutBounds().getWidth()/2 - 2);
+            roundPayText.setLayoutY(137);
+            
+            textPane.getChildren().add(roundPayText);
         
             // Make glass bridge bg
             ImageView bridgeImg = new ImageView(new Image(bridgeUrl));
             bridgeImg.setPreserveRatio(true);
-            bridgeImg.setFitWidth(500);
+            bridgeImg.setFitWidth(width);
             
             //Make container for glass rows
             VBox glassContainer = new VBox();
-            
-            // 20% chance to be a vbucks 
-            double vBucksChance = 0.2; // cange to acc vbucks cance after testing
             
             // Make glass rows
             for (int i=3; i>0; i--)
@@ -92,8 +120,8 @@ public class Bridges extends StackPane
                     double breakRisk = 0;
                     if (gen.nextDouble() < vBucksChance)
                     {
-                        breakRisk = 0.5;
-                        payout = gen.nextInt(200) + 200;
+                        breakRisk = 0.2; // change the breakrisk after getting broken tiles
+                        payout = gen.nextInt(50) + 50;
                     }
                     Tile current = new Tile(roundNum, i-1, j, payout, breakRisk);
                     tiles.add(current);
@@ -104,14 +132,14 @@ public class Bridges extends StackPane
                 int payout = 0;
                 if (gen.nextDouble() < vBucksChance)
                 {
-                    payout = gen.nextInt(200) + 200;
+                    payout = gen.nextInt(50) + 50;
                 }
                 int randomIndex = gen.nextInt(glassPerRow);
                 Tile willBreak = new Tile(roundNum, i-1, randomIndex, payout, 1);
                 glassRow.getChildren().set(randomIndex, willBreak);
                 tiles.add(willBreak);
                 
-                glassRow.setAlignment(Pos.CENTER);
+                glassRow.setAlignment(Pos.BOTTOM_CENTER);
                 glassRow.setSpacing(spacing);
                 
                 // scale down as it goes further
@@ -125,10 +153,11 @@ public class Bridges extends StackPane
                 glassContainer.getChildren().add(glassRow);
             }
             glassContainer.setAlignment(Pos.BOTTOM_CENTER);
+            glassContainer.setTranslateX(-5.4);
             
             this.setAlignment(bridgeImg, Pos.BOTTOM_CENTER);
             this.setAlignment(glassContainer, Pos.BOTTOM_CENTER);
-            this.getChildren().addAll(bridgeImg, glassContainer);
+            this.getChildren().addAll(bg, bridgeImg, textPane, glassContainer);
             this.roundNum = roundNum;
             setFunctions();
         }
@@ -141,5 +170,10 @@ public class Bridges extends StackPane
             Tile current = tiles.get(i);
             current.setOnMouseClicked(event);
         }
+    }
+    
+    public void resetRoundNum()
+    {
+        roundNum = 0;
     }
 }

@@ -5,7 +5,10 @@ import javafx.scene.image.Image;
 import java.util.Random;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
-
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.util.Duration;
 /**
  * Write a description of class Round here.
  *
@@ -19,8 +22,12 @@ public class GameLayout extends StackPane
     protected Character player;
     protected Bridges bridgePane;
     protected UILayer ui;
+    protected LoseScreen gameOverScreen;
     protected double width;
     protected double height;
+    protected double startPosX;
+    protected double startPosY;
+    protected Timeline timeline;
     
     public GameLayout(double width, double height)
     {
@@ -28,14 +35,20 @@ public class GameLayout extends StackPane
         this.setPrefWidth(width);
         this.setPrefHeight(height);
         gen = new Random();
-        player = new Character();
         gameLogic = new Logic();
+        player = new Character();
 
         this.width = width;
         this.height = height;
         
+        this.startPosX = width/2;
+        this.startPosY = height - 10;
+        
+        timeline = new Timeline();
+        
         drawBridgeAndPlayer();
         drawUI();
+        drawLoseScreen();
     }
     
     private void drawBridgeAndPlayer()
@@ -48,7 +61,8 @@ public class GameLayout extends StackPane
         playerPane.setMouseTransparent(true);
         playerPane.setPrefWidth(width);
         playerPane.setPrefHeight(height);        
-        playerPane.getChildren().add(player);        
+        playerPane.getChildren().add(player); 
+        player.move(startPosX, startPosY, 0);
         
         // create bride pane
         bridgePane = new Bridges(width, height, gameLogic.getRoundNum(), gameLogic.getRoundPayout(), 
@@ -66,14 +80,17 @@ public class GameLayout extends StackPane
                     if (allowMovement)
                     {
                         // move player to tile
-                        player.move(clicked.getCenterX(), clicked.getCenterY());                      
+                        player.move(clicked.getCenterX(), clicked.getCenterY(), clicked.getRowNum());                      
                         
                         // check if tile is broken
                         boolean isBroken = gen.nextDouble() < clicked.getBreakRisk();
                         if (isBroken)
                         {                            
                             // update the tile image
-                            clicked.setImage("broken");
+                            timeline.getKeyFrames().clear();
+                            KeyFrame setBroke = new KeyFrame(Duration.millis(500), frame -> clicked.setImage("broken"));
+                            timeline.getKeyFrames().add(setBroke);
+                            timeline.play();
                         
                             // fail the player
                             gameLogic.lose();
@@ -85,10 +102,10 @@ public class GameLayout extends StackPane
                             
                             // update the image of the tile
                             clicked.setImage("regular");
+                                                
+                            // update the rowNum
+                            gameLogic.incRowNum();
                         }
-                    
-                        // update the rowNum
-                        gameLogic.incRowNum();
                     }
                                         
                     // Update the rest of the game
@@ -108,11 +125,32 @@ public class GameLayout extends StackPane
         ui = new UILayer(width, height);
         this.getChildren().add(ui);
     }
+    
+    private void drawLoseScreen()
+    {
+        gameOverScreen = new LoseScreen(width, height,
+            new EventHandler<MouseEvent>() 
+            {
+                @Override
+                public void handle(MouseEvent e) 
+                {
+                    gameLogic.reset();
+                    
+                    player.move(startPosX, startPosY, 0);
+                    bridgePane.resetRoundNum();
+                    
+                    updateAll();
+                }
+            }
+        );
+        this.getChildren().add(gameOverScreen);
+    }
      
     private void updateAll()
     {
+        gameOverScreen.updateLose(gameLogic.getHasLost());
         ui.updateUI(gameLogic.getPayout());
-        
+                
         // add 
         bridgePane.updateBridge(gameLogic.getRoundNum(), gameLogic.getRoundPayout());
     }

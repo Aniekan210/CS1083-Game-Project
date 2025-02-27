@@ -15,34 +15,45 @@ public class Character extends ImageView
     protected Timeline timeline;
     protected Image defaultImg;
     protected Image jumpingImg;
+    protected double originalW;
+    protected double originalH;
+    protected double[] scales;
 
     public Character() 
     {
         super();
-        super.setFitWidth(75);
+        super.setFitWidth(150);
         super.setPreserveRatio(true);
         
         defaultImg = new Image("./assets/images/character.png");
         jumpingImg = new Image("./assets/images/character_jump.png");
         this.setImage(defaultImg);
         
+        scales = new double[]{1, 0.92, 0.83};
+        originalW = this.getLayoutBounds().getWidth();
+        originalH = this.getLayoutBounds().getHeight();
+        
         timeline = new Timeline();
     }
 
-    public void move(double x, double y) 
+    public void move(double x, double y, int rowNum) 
     {
         timeline.getKeyFrames().clear();
+    
+        double scale = scales[rowNum];
+        double pivotX = (originalW * scale) / 2;  
+        double pivotY = originalH * scale;  
 
-        double pivotX = this.getLayoutBounds().getWidth() / 2;  
-        double pivotY = this.getLayoutBounds().getHeight();  
-
-        KeyFrame xMovement = new KeyFrame(Duration.millis(200), new KeyValue(this.translateXProperty(), x - pivotX));
-        KeyFrame yMovement = new KeyFrame(Duration.millis(200), new KeyValue(this.translateYProperty(), y - pivotY));
+        KeyFrame xMovement = new KeyFrame(Duration.millis(500), new KeyValue(this.translateXProperty(), x - pivotX));
+        KeyFrame yMovement = new KeyFrame(Duration.millis(500), new KeyValue(this.translateYProperty(), y - pivotY));
+        
+        KeyFrame xScale = new KeyFrame(Duration.millis(500), new KeyValue(this.scaleXProperty(), scale));
+        KeyFrame yScale = new KeyFrame(Duration.millis(500), new KeyValue(this.scaleYProperty(), scale));
 
         KeyFrame jumping = new KeyFrame(Duration.ZERO, e -> this.setImage(jumpingImg));
-        KeyFrame defaultS = new KeyFrame(Duration.millis(200), e -> this.setImage(defaultImg));
+        KeyFrame defaultS = new KeyFrame(Duration.millis(500), e -> this.setImage(defaultImg));
 
-        timeline.getKeyFrames().addAll(xMovement, yMovement, jumping, defaultS);
+        timeline.getKeyFrames().addAll(xMovement, yMovement, xScale, yScale, jumping, defaultS);
         timeline.play();
     }
 }
