@@ -47,8 +47,7 @@ public class GameLayout extends StackPane
         timeline = new Timeline();
         
         drawBridgeAndPlayer();
-        drawUI();
-        drawLoseScreen();
+        drawScreens();
     }
     
     private void drawBridgeAndPlayer()
@@ -62,7 +61,7 @@ public class GameLayout extends StackPane
         playerPane.setPrefWidth(width);
         playerPane.setPrefHeight(height);        
         playerPane.getChildren().add(player); 
-        player.move(startPosX, startPosY, 0);
+        player.move(startPosX, startPosY, 0, false);
         
         // create bride pane
         bridgePane = new Bridges(width, height, gameLogic.getRoundNum(), gameLogic.getRoundPayout(), 
@@ -80,7 +79,7 @@ public class GameLayout extends StackPane
                     if (allowMovement)
                     {
                         // move player to tile
-                        player.move(clicked.getCenterX(), clicked.getCenterY(), clicked.getRowNum());                      
+                        player.move(clicked.getCenterX(), clicked.getCenterY(), clicked.getRowNum(), true);                      
                         
                         // check if tile is broken
                         boolean isBroken = gen.nextDouble() < clicked.getBreakRisk();
@@ -88,7 +87,10 @@ public class GameLayout extends StackPane
                         {                            
                             // update the tile image
                             timeline.getKeyFrames().clear();
-                            KeyFrame setBroke = new KeyFrame(Duration.millis(500), frame -> clicked.setImage("broken"));
+                            KeyFrame setBroke = new KeyFrame(Duration.millis(600), frame -> {
+                                clicked.setImage("broken");
+                                clicked.playBreak();
+                            });
                             timeline.getKeyFrames().add(setBroke);
                             timeline.play();
                         
@@ -107,7 +109,15 @@ public class GameLayout extends StackPane
                             gameLogic.incRowNum();
                         }
                     }
-                                        
+                    
+                    if(gameLogic.getRowNum() == 3)
+                    {
+                        //gameLogic.addPayout(gameLogic.getRoundPayout());
+                    }
+                    if(gameLogic.getRowNum() == 3 && gameLogic.getRoundNum() == 3)
+                    {
+                        //gameLogic.win();
+                    } 
                     // Update the rest of the game
                     updateAll();
                 }
@@ -120,30 +130,22 @@ public class GameLayout extends StackPane
         this.getChildren().addAll(container);
     }
     
-    private void drawUI()
+    private void drawScreens()
     {
         ui = new UILayer(width, height);
-        this.getChildren().add(ui);
-    }
-    
-    private void drawLoseScreen()
-    {
+        
         gameOverScreen = new LoseScreen(width, height,
             new EventHandler<MouseEvent>() 
             {
                 @Override
                 public void handle(MouseEvent e) 
                 {
-                    gameLogic.reset();
-                    
-                    player.move(startPosX, startPosY, 0);
-                    bridgePane.resetRoundNum();
-                    
-                    updateAll();
+                    reset();
                 }
             }
-        );
-        this.getChildren().add(gameOverScreen);
+        );        
+        
+        this.getChildren().addAll(ui, gameOverScreen);        
     }
      
     private void updateAll()
@@ -153,5 +155,13 @@ public class GameLayout extends StackPane
                 
         // add 
         bridgePane.updateBridge(gameLogic.getRoundNum(), gameLogic.getRoundPayout());
+    }
+    
+    private void reset()
+    {
+        gameLogic.reset();
+        player.move(startPosX, startPosY, 0, false);
+        bridgePane.resetRoundNum();
+        updateAll();
     }
 }

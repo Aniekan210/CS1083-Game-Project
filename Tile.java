@@ -1,6 +1,7 @@
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.geometry.Bounds;
+import javafx.scene.media.AudioClip;
 
 /*************************************************
  * Class to create a singular tile
@@ -14,6 +15,8 @@ public class Tile extends ImageView {
     protected int pay;
     protected double breakRisk;
     protected boolean hasBroken;
+    protected AudioClip brokenSound;
+
 
     public Tile(int roundNum, int rowNum, int rowPos, int pay, double breakRisk) 
     {
@@ -25,6 +28,7 @@ public class Tile extends ImageView {
         this.pay = pay;
         String state = pay > 0 ? "money" : "regular";
         setImage(state);
+        brokenSound = new AudioClip("file:assets/sounds/glassBreak.mp3");
     }     
 
     public void setImage(String state) 
@@ -33,6 +37,11 @@ public class Tile extends ImageView {
         super.setImage(new Image(imgUrl));
         super.setPreserveRatio(true);
         super.setFitWidth(200);
+    }
+    
+    public void playBreak()
+    {
+        brokenSound.play(0.6);
     }
 
     // Accessor methods

@@ -69,4 +69,5 @@ public class Logic
     public int getPayout() { return payout; }
     public int getRoundPayout() { return payouts[roundNo-1]; }
     public boolean getHasLost() { return hasLost; }
+    public boolean getHasWon() { return hasWon; }
 }

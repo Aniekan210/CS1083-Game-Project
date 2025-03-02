@@ -63,7 +63,7 @@ public class Bridges extends StackPane
                 glassPerRow = 3;
                 scale = new double[]{1.2,1,0.65};
                 movement = new double[]{-30, -15, 15};
-                vBucksChance = 0.2;
+                vBucksChance = 0;
                 break;
             case 3:
                 glassPerRow = 2;
@@ -94,9 +94,7 @@ public class Bridges extends StackPane
             
             Text roundPayText = new Text("+"+roundPay);
             roundPayText.setFont(Font.font("Comic Sans MS", 28));
-            roundPayText.setFill(Color.WHITE);
-            roundPayText.setStroke(Color.BLACK);
-            roundPayText.setStrokeWidth(1);
+            roundPayText.setFill(Color.BLACK);
             roundPayText.setLayoutX(width/2 - roundPayText.getLayoutBounds().getWidth()/2 - 2);
             roundPayText.setLayoutY(137);
             
@@ -121,7 +119,7 @@ public class Bridges extends StackPane
                     if (gen.nextDouble() < vBucksChance)
                     {
                         breakRisk = 0.2; // change the breakrisk after getting broken tiles
-                        payout = gen.nextInt(50) + 50;
+                        payout = (gen.nextInt(50) + 50)/10 * 10;
                     }
                     Tile current = new Tile(roundNum, i-1, j, payout, breakRisk);
                     tiles.add(current);
@@ -129,10 +127,10 @@ public class Bridges extends StackPane
                 }
                 
                 // generate a tile that will break and add it to the row
-                int payout = 0;
+                int payout = 1;
                 if (gen.nextDouble() < vBucksChance)
                 {
-                    payout = gen.nextInt(50) + 50;
+                    payout = (gen.nextInt(50) + 50)/10 * 10;
                 }
                 int randomIndex = gen.nextInt(glassPerRow);
                 Tile willBreak = new Tile(roundNum, i-1, randomIndex, payout, 1);
