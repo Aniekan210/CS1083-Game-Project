@@ -1,11 +1,11 @@
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
-/**
- * Write a description of class HintButton here.
+/***************************************************************
+ * This is just a button that show the the rules and how to play
  *
- * @author (your name)
- * @version (a version number or a date)
- */
+ * @author Aniekan
+ * @version new feature
+ ***************************************************************/
 public class HintButton extends ImageView
 {
     protected boolean isOff;
