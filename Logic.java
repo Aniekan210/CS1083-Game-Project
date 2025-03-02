@@ -1,7 +1,7 @@
 /***********************************************
  * This class is the brain of the entire game.
  *
- * @author Anieken Ekarika
+ * @author Aniekan Skye Kings
  * @version Update logic version
  *******************************************/
 public class Logic

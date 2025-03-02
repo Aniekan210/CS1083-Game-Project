@@ -12,7 +12,7 @@ import javafx.util.Duration;
 /*******************************************
  *The is the setup and view of the game
  *
- * @author Aniekan Abasi
+ * @author Group Aniekan, Skye, Kings
  * @version Group project (Game)
  *******************************************/
 public class GameLayout extends StackPane
@@ -101,10 +101,20 @@ public class GameLayout extends StackPane
                         else
                         {
                             // check how many vbucks it has and add it to the payout
-                            gameLogic.addPayout(clicked.getPayout());
-                            
-                            // update the image of the tile
-                            clicked.setImage("regular");
+                            int payout = clicked.getPayout();
+                            if (payout != 0)
+                            {
+                                gameLogic.addPayout(payout);
+                                
+                                // update the image of the tile
+                                timeline.getKeyFrames().clear();
+                                KeyFrame setBroke = new KeyFrame(Duration.millis(600), frame -> {
+                                    clicked.setImage("regular");
+                                    clicked.playMoney();
+                                });
+                                timeline.getKeyFrames().add(setBroke);
+                                timeline.play();
+                            }
                                                 
                             // update the rowNum
                             gameLogic.incRowNum();

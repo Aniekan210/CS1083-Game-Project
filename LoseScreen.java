@@ -49,7 +49,7 @@ public class LoseScreen extends StackPane
         {
             timeline.getKeyFrames().clear();
             
-            KeyFrame nothing = new KeyFrame(Duration.millis(700), new KeyValue(overlay.opacityProperty(), 0));
+            KeyFrame nothing = new KeyFrame(Duration.millis(650), new KeyValue(overlay.opacityProperty(), 0));
             KeyFrame opacityUp = new KeyFrame(Duration.millis(1200), new KeyValue(overlay.opacityProperty(), 1));
             KeyFrame visible = new KeyFrame(Duration.millis(1200), e -> resetButton.setVisible(true));
             overlay.setMouseTransparent(false);

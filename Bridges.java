@@ -123,7 +123,7 @@ public class Bridges extends StackPane
                 HBox glassRow = new HBox(0);    
                 for(int j=0; j<glassPerRow; j++)
                 {
-                    int payout = 0;
+                    int payout = 1;
                     double breakRisk = 0;
                     if (gen.nextDouble() < vBucksChance)
                     {
@@ -138,7 +138,7 @@ public class Bridges extends StackPane
                 }
                 
                 // generate a tile that will break and add it to the row
-                int payout = 1;
+                int payout = 0;
                 if (gen.nextDouble() < vBucksChance)
                 {
                     payout = (gen.nextInt(50) + 50)/10 * 10;

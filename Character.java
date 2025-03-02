@@ -9,7 +9,7 @@ import javafx.scene.media.AudioClip;
 /**
  * Class to create visual character object
  *
- * @author Aniekan Ekarika 
+ * @author Aniekan Skye Kings 
  */
 public class Character extends ImageView 
 {
@@ -37,8 +37,8 @@ public class Character extends ImageView
         jumpSound = new AudioClip("file:assets/sounds/jump.mp3");
         landSound = new AudioClip("file:assets/sounds/land.mp3");
         
-        jumpSound.setVolume(0.67); // Set volume to max (range: 0.0 to 1.0)
-        landSound.setVolume(0.15);
+        jumpSound.setVolume(0.6);
+        landSound.setVolume(0.2);
         
         scales = new double[]{1, 0.92, 0.83};
         originalW = this.getLayoutBounds().getWidth();
@@ -67,7 +67,6 @@ public class Character extends ImageView
             this.setImage(jumpingImg);
             if(notReset)
             {
-                jumpSound.stop();
                 jumpSound.play();
             }
         });
@@ -75,7 +74,6 @@ public class Character extends ImageView
             this.setImage(defaultImg);
             if(notReset)
             {
-                landSound.stop();
                 landSound.play();
             }
         });

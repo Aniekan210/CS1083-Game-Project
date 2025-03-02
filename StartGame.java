@@ -7,7 +7,7 @@ import javafx.scene.image.Image;
 /***************************************************
  * this class starts up the game
  *
- * @author Aniekan , Skye
+ * @author Aniekan , Skye, Kings
  * @version Latest version of start
  ***************************************************/
 public class StartGame extends Application
