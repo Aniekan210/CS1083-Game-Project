@@ -7,12 +7,12 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.util.Duration;
 import javafx.animation.Interpolator;
-/**
- * Write a description of class ClosingScreen here.
+/********************************************************************
+ * This class organise all the aspect of the game to look attractive
  *
- * @author (your name)
- * @version (a version number or a date)
- */
+ * @author CS Group Aniekan, Skye, Kings
+ * @version Updated version of the UI
+ ********************************************************************/
 public class UILayer extends StackPane
 {
     protected Timeline timeline;
@@ -25,10 +25,12 @@ public class UILayer extends StackPane
         super();
         this.setPrefWidth(width);
         this.setPrefHeight(height);
+        //don't allow user to pick beyond the interactable objects
         this.setPickOnBounds(false);
         
         timeline = new Timeline();
-        
+
+        //place the hint at the top-left corner
         isOpened = false;
         modal = new ImageView(new Image("./assets/images/hint.png"));
         modal.setScaleX(0);

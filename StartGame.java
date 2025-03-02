@@ -4,12 +4,12 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 
-/**
- * Write a description of JavaFX class Game here.
+/***************************************************
+ * this class starts up the game
  *
- * @author (your name)
- * @version (a version number or a date)
- */
+ * @author Aniekan , Skye
+ * @version Latest version of start
+ ***************************************************/
 public class StartGame extends Application
 {
     @Override

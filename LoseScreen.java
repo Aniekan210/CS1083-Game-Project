@@ -8,14 +8,15 @@ import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.util.Duration;
-/**
- * Write a description of class LoseScreen here.
+/**********************************************
+ * The screen output for anyone who loses
  *
- * @author (your name)
- * @version (a version number or a date)
- */
+ * @author Group Project (Aniekan, Skye, Kings)
+ * @version Latest version of losing screen
+ *********************************************/
 public class LoseScreen extends StackPane
 {
+    //Instance data
     protected Rectangle overlay;
     protected Button resetButton;
     protected Timeline timeline;
@@ -28,12 +29,14 @@ public class LoseScreen extends StackPane
         this.setPickOnBounds(false);
         
         timeline = new Timeline();
-        
+
+        //Let the entire screen be pitch black once player loses(for now)
         overlay = new Rectangle(width, height, Color.BLACK);
         overlay.setOpacity(0);
         overlay.setMouseTransparent(true);
-        
-        resetButton = new Button("RESET");
+
+        //make Reset button to start the game from the beginning 
+        resetButton = new Button("PLAY AGAIN");
         resetButton.setOnMouseClicked(event);
         resetButton.setVisible(false);
         
