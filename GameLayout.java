@@ -9,14 +9,15 @@ import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.util.Duration;
-/**
- * Write a description of class Round here.
+/*******************************************
+ *The is the setup and view of the game
  *
- * @author (your name)
- * @version (a version number or a date)
- */
+ * @author Aniekan Abasi
+ * @version Group project (Game)
+ *******************************************/
 public class GameLayout extends StackPane
 {
+    //Instance data
     protected Logic gameLogic;
     private Random gen;
     protected Character player;
@@ -114,7 +115,7 @@ public class GameLayout extends StackPane
             }
         );
         
-        // add bridge pane and payer pane to contaner
+        // add bridge pane and player pane to contaner
         container.getChildren().addAll(bridgePane, playerPane);
         
         this.getChildren().addAll(container);
