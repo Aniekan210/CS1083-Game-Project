@@ -7,7 +7,8 @@ import javafx.geometry.Bounds;
  *
  * @author CS Group Aniekan
  ************************************************/
-public class Tile extends ImageView {
+public class Tile extends ImageView
+{
     protected int rowNum;
     protected int rowPos;
     protected int roundNum;
