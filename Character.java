@@ -12,6 +12,7 @@ import javafx.util.Duration;
  */
 public class Character extends ImageView 
 {
+    //get the character stance and character jump
     protected Timeline timeline;
     protected Image defaultImg;
     protected Image jumpingImg;
@@ -23,8 +24,9 @@ public class Character extends ImageView
     {
         super();
         super.setFitWidth(150);
+        //keeps the original ratio of the image
         super.setPreserveRatio(true);
-        
+        // add the stances
         defaultImg = new Image("./assets/images/character.png");
         jumpingImg = new Image("./assets/images/character_jump.png");
         this.setImage(defaultImg);
@@ -38,12 +40,14 @@ public class Character extends ImageView
 
     public void move(double x, double y, int rowNum) 
     {
+        //clear previous movement
         timeline.getKeyFrames().clear();
     
         double scale = scales[rowNum];
         double pivotX = (originalW * scale) / 2;  
         double pivotY = originalH * scale;  
 
+        //translate the character to the position which has been clicked
         KeyFrame xMovement = new KeyFrame(Duration.millis(500), new KeyValue(this.translateXProperty(), x - pivotX));
         KeyFrame yMovement = new KeyFrame(Duration.millis(500), new KeyValue(this.translateYProperty(), y - pivotY));
         
