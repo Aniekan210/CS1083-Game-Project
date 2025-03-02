@@ -10,12 +10,12 @@ import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-/**
- * Write a description of class Bridges here.
+/*******************************************************************************************************************************
+ * This is a class places glass tiles ontop of bridges but in other to get to the other side you have to step on the right glass.
  *
- * @author (your name)
- * @version (a version number or a date)
- */
+ * @author Group Aniekan, Skye and Kings
+ * @version 1st March 2025
+ ******************************************************************************************************************************/
 public class Bridges extends StackPane
 {
     protected int glassPerRow;
@@ -50,21 +50,26 @@ public class Bridges extends StackPane
     
     public void updateBridge(int roundNum, int roundPay)
     {
+        //Make a new bridge for every new round
         switch(roundNum)
         {
             case 1:
                 glassPerRow = 4;
+                //scale of each of the 3 glass tiles
                 scale = new double[]{0.5,0.5,0.5};
+                //distance the player moves(upward kind of)
                 movement = new double[]{-70, -75, -60};
                 spacing = -10;
                 vBucksChance = 0;
                 break;
+                
             case 2:
                 glassPerRow = 3;
                 scale = new double[]{1.2,1,0.65};
                 movement = new double[]{-30, -15, 15};
                 vBucksChance = 0.2;
                 break;
+                
             case 3:
                 glassPerRow = 2;
                 scale = new double[]{1.42,1.12,0.87};
@@ -73,6 +78,7 @@ public class Bridges extends StackPane
                 vBucksChance = 0;
                 break;
         }
+        //get the bridge and glass tile image
         bridgeUrl = String.format("./assets/images/round_%d/bridge.png", roundNum);
         bgUrl = String.format("./assets/images/round_%d/bg.png", roundNum);
         drawBridge(roundNum, roundPay);
@@ -82,16 +88,19 @@ public class Bridges extends StackPane
     {
         if(this.roundNum != roundNum)
         {
+            //remove all the tiles and Bridges
             tiles.clear();
             this.getChildren().clear();
-            
+
+            //make a new bridge
             ImageView bg = new ImageView(new Image(bgUrl));
             bg.setFitHeight(height);
             bg.setFitWidth(width);
-            
+
             Pane textPane = new Pane();
             textPane.setMouseTransparent(true);
             
+            //Display amount of vBucks won 
             Text roundPayText = new Text("+"+roundPay);
             roundPayText.setFont(Font.font("Comic Sans MS", 28));
             roundPayText.setFill(Color.WHITE);
@@ -120,9 +129,11 @@ public class Bridges extends StackPane
                     double breakRisk = 0;
                     if (gen.nextDouble() < vBucksChance)
                     {
-                        breakRisk = 0.2; // change the breakrisk after getting broken tiles
+                        // change the breakrisk after getting broken tiles
+                        breakRisk = 0.2; 
                         payout = gen.nextInt(50) + 50;
                     }
+                    //make a regular tile
                     Tile current = new Tile(roundNum, i-1, j, payout, breakRisk);
                     tiles.add(current);
                     glassRow.getChildren().add(current);
@@ -167,11 +178,12 @@ public class Bridges extends StackPane
     {
         for (int i=0; i<tiles.size(); i++)
         {
+            //get the tile that was clicked
             Tile current = tiles.get(i);
             current.setOnMouseClicked(event);
         }
     }
-    
+    //Restart the gsme for the very beginning
     public void resetRoundNum()
     {
         roundNum = 0;
