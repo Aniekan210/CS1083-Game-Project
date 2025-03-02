@@ -36,7 +36,7 @@ public class LoseScreen extends StackPane
         overlay.setMouseTransparent(true);
 
         //make Reset button to start the game from the beginning 
-        resetButton = new Button("RESET");
+        resetButton = new Button("PLAY AGAIN");
         resetButton.setOnMouseClicked(event);
         resetButton.setVisible(false);
         
