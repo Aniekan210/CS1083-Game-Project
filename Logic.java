@@ -1,10 +1,9 @@
-
-/**
- * Write a description of class Player here.
+/***********************************************
+ * This class is the brain of the entire game.
  *
  * @author Anieken Ekarika
- * @version (a version number or a date)
- */
+ * @version Update logic version
+ *******************************************/
 public class Logic
 {
     protected int roundNo;
