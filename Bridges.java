@@ -20,7 +20,6 @@ public class Bridges extends StackPane
 {
     protected int glassPerRow;
     protected String bridgeUrl;
-    protected String bgUrl;
     protected double[] scale;
     protected double[] movement;
     protected ArrayList<ArrayList<Tile>> tiles;
@@ -31,6 +30,7 @@ public class Bridges extends StackPane
     protected double width;
     protected double height;
     protected double vBucksChance;
+    protected double translate;
     
     public Bridges(double width, double height, int roundNum, int roundPay, EventHandler<MouseEvent> event)
     {   
@@ -65,22 +65,23 @@ public class Bridges extends StackPane
                 
             case 2:
                 glassPerRow = 3;
-                scale = new double[]{1.2,1,0.65};
-                movement = new double[]{-30, -15, 15};
+                scale = new double[]{1.22,1,0.83};
+                movement = new double[]{-80, -10, 70};
+                spacing = -53;
                 vBucksChance = 0;
+                translate = 0;
                 break;
-                
             case 3:
                 glassPerRow = 2;
                 scale = new double[]{1.42,1.12,0.87};
                 movement = new double[]{-65, -38, 10};
                 spacing = -35;
                 vBucksChance = 0;
+                translate = -5.4;
                 break;
         }
         //get the bridge and glass tile image
         bridgeUrl = String.format("./assets/images/round_%d/bridge.png", roundNum);
-        bgUrl = String.format("./assets/images/round_%d/bg.png", roundNum);
         drawBridge(roundNum, roundPay);
     }
     
@@ -93,7 +94,7 @@ public class Bridges extends StackPane
             this.getChildren().clear();
 
             //make a new bridge
-            ImageView bg = new ImageView(new Image(bgUrl));
+            ImageView bg = new ImageView(new Image("./assets/images/bg.png"));
             bg.setFitHeight(height);
             bg.setFitWidth(width);
 
@@ -120,7 +121,7 @@ public class Bridges extends StackPane
             // Make glass rows
             for (int i=3; i>0; i--)
             {
-                HBox glassRow = new HBox(0);   
+                HBox glassRow = new HBox();   
                 ArrayList<Tile> tileRow = new ArrayList<Tile>();
                 for(int j=0; j<glassPerRow; j++)
                 {
@@ -163,7 +164,7 @@ public class Bridges extends StackPane
                 glassContainer.getChildren().add(glassRow);
             }
             glassContainer.setAlignment(Pos.BOTTOM_CENTER);
-            glassContainer.setTranslateX(-5.4);
+            glassContainer.setTranslateX(translate);
             
             this.setAlignment(bridgeImg, Pos.BOTTOM_CENTER);
             this.setAlignment(glassContainer, Pos.BOTTOM_CENTER);
@@ -185,6 +186,25 @@ public class Bridges extends StackPane
             }
         }
     }
+    
+    public void revealRows(int rowNum)
+    {
+        int totalRows = tiles.size();
+        for (int i=totalRows-rowNum; i<totalRows; i++)
+        {
+            ArrayList<Tile> tileRow = tiles.get(i);
+            for (int j=0; j<tileRow.size(); j++)
+            {
+                Tile current = tileRow.get(j);
+                if (current.getBreakRisk() == 1)
+                {
+                    current.setImage("broken");
+                }
+            }
+        }
+    }
+    
+    
     //Restart the gsme for the very beginning
     public void resetRoundNum()
     {

@@ -40,6 +40,7 @@ public class Tile extends ImageView
         super.setImage(new Image(imgUrl));
         super.setPreserveRatio(true);
         super.setFitWidth(200);
+        this.setPickOnBounds(false);
     }
     
     public void playBreak()

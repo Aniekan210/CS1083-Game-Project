@@ -13,6 +13,7 @@ public class Logic
     protected int payout;
     protected int[] payouts;
     protected boolean start;
+    protected boolean wonRound;
     
     public Logic()
     {
@@ -48,18 +49,24 @@ public class Logic
     
     public void reset()
     {
-        roundNo = 3;
+        roundNo = 2; // change to 1
         rowNo = 0;
-        hasLost = false;
+        hasLost = false; // change to false
         hasWon = false;
         payout = 0;
         payouts = new int[]{500, 600, 800};
-        start = true;
+        start = true; // change to true
+        wonRound = false;
     }
     
     public void start()
     {
         start = false;
+    }
+    
+    public void setWonRound(boolean value)
+    {
+        wonRound = value;
     }
     
     // Accessor methods
@@ -70,4 +77,5 @@ public class Logic
     public boolean getHasLost() { return hasLost; }
     public boolean getHasWon() { return hasWon; }
     public boolean getStart() { return start; }
+    public boolean getWonRound() { return wonRound; }
 }

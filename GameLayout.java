@@ -108,6 +108,9 @@ public class GameLayout extends StackPane
                         }
                         else
                         {
+                            // update the rowNum
+                            gameLogic.incRowNum();
+                            
                             // check how many vbucks it has and add it to the payout
                             int payout = clicked.getPayout();
                             if (payout != 0)
@@ -119,13 +122,11 @@ public class GameLayout extends StackPane
                                 KeyFrame setBroke = new KeyFrame(Duration.millis(600), frame -> {
                                     clicked.setImage("regular");
                                     clicked.playMoney();
+                                    bridgePane.revealRows(gameLogic.getRowNum());
                                 });
                                 timeline.getKeyFrames().add(setBroke);
                                 timeline.play();
                             }
-                                                
-                            // update the rowNum
-                            gameLogic.incRowNum();
                         }
                     }
                     

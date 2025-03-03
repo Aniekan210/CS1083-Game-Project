@@ -12,7 +12,7 @@ public class InstructionsBar extends ImageView
     {        
         super(new Image("./assets/images/instruction.png"));
         this.setPreserveRatio(true);
-        this.setFitWidth(300);
+        this.setFitWidth(375);
     }
     
     public void setXByPivot(double x)
