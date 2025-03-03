@@ -23,7 +23,7 @@ public class Bridges extends StackPane
     protected String bgUrl;
     protected double[] scale;
     protected double[] movement;
-    protected ArrayList<Tile> tiles;
+    protected ArrayList<ArrayList<Tile>> tiles;
     protected EventHandler<MouseEvent> event;
     protected Random gen;
     protected int roundNum;
@@ -40,7 +40,7 @@ public class Bridges extends StackPane
         super.setPrefHeight(height);
         this.width = width;
         this.height = height;
-        tiles = new ArrayList<Tile>();
+        tiles = new ArrayList<ArrayList<Tile>>();
         this.event = event;
         this.roundNum = 0;
         gen = new Random();
@@ -120,7 +120,8 @@ public class Bridges extends StackPane
             // Make glass rows
             for (int i=3; i>0; i--)
             {
-                HBox glassRow = new HBox(0);    
+                HBox glassRow = new HBox(0);   
+                ArrayList<Tile> tileRow = new ArrayList<Tile>();
                 for(int j=0; j<glassPerRow; j++)
                 {
                     int payout = 1;
@@ -133,7 +134,7 @@ public class Bridges extends StackPane
                     }
                     //make a regular tile
                     Tile current = new Tile(roundNum, i-1, j, payout, breakRisk);
-                    tiles.add(current);
+                    tileRow.add(current);
                     glassRow.getChildren().add(current);
                 }
                 
@@ -146,7 +147,7 @@ public class Bridges extends StackPane
                 int randomIndex = gen.nextInt(glassPerRow);
                 Tile willBreak = new Tile(roundNum, i-1, randomIndex, payout, 1);
                 glassRow.getChildren().set(randomIndex, willBreak);
-                tiles.add(willBreak);
+                tileRow.set(randomIndex, willBreak);
                 
                 glassRow.setAlignment(Pos.BOTTOM_CENTER);
                 glassRow.setSpacing(spacing);
@@ -158,7 +159,7 @@ public class Bridges extends StackPane
                 
                 // Adjust spacing dynamically for a perspective effect
                 glassRow.setTranslateY(movement[i-1]);
-    
+                tiles.add(tileRow);
                 glassContainer.getChildren().add(glassRow);
             }
             glassContainer.setAlignment(Pos.BOTTOM_CENTER);
@@ -176,9 +177,12 @@ public class Bridges extends StackPane
     {
         for (int i=0; i<tiles.size(); i++)
         {
-            //get the tile that was clicked
-            Tile current = tiles.get(i);
-            current.setOnMouseClicked(event);
+            ArrayList<Tile> currentList = tiles.get(i);
+            for (int j=0; j<currentList.size(); j++)
+            {
+                Tile current = currentList.get(j);
+                current.setOnMouseClicked(event);
+            }
         }
     }
     //Restart the gsme for the very beginning

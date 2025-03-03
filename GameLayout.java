@@ -9,6 +9,8 @@ import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.util.Duration;
+import javafx.scene.media.AudioClip;
+
 /*******************************************
  *The is the setup and view of the game
  *
@@ -24,13 +26,15 @@ public class GameLayout extends StackPane
     protected Bridges bridgePane;
     protected UILayer ui;
     protected LoseScreen gameOverScreen;
+    protected StartScreen start;
     protected double width;
     protected double height;
     protected double startPosX;
     protected double startPosY;
     protected Timeline timeline;
+    protected AudioClip backgroundMusic;
     
-    public GameLayout(double width, double height)
+    public GameLayout(double width, double height, AudioClip backgroundMusic)
     {
         super();
         this.setPrefWidth(width);
@@ -38,7 +42,11 @@ public class GameLayout extends StackPane
         gen = new Random();
         gameLogic = new Logic();
         player = new Character();
-
+        
+        this.backgroundMusic = backgroundMusic;
+        this.backgroundMusic.setCycleCount(AudioClip.INDEFINITE);
+        this.backgroundMusic.play(0.2);
+        
         this.width = width;
         this.height = height;
         
@@ -145,7 +153,9 @@ public class GameLayout extends StackPane
     {
         ui = new UILayer(width, height);
         
-        gameOverScreen = new LoseScreen(width, height,
+        gameOverScreen = new LoseScreen(width, height, backgroundMusic);
+        
+        ResetBtn rst = new ResetBtn(width, height,
             new EventHandler<MouseEvent>() 
             {
                 @Override
@@ -154,13 +164,26 @@ public class GameLayout extends StackPane
                     reset();
                 }
             }
-        );        
+        ); 
         
-        this.getChildren().addAll(ui, gameOverScreen);        
+        start = new StartScreen(width, height,
+            new EventHandler<MouseEvent>() 
+            {
+                @Override
+                public void handle(MouseEvent e) 
+                {
+                    gameLogic.start();
+                    updateAll();
+                }
+            }
+        ); 
+        
+        this.getChildren().addAll(ui, gameOverScreen, rst, start);        
     }
      
     private void updateAll()
     {
+        start.updateStart(gameLogic.getStart());
         gameOverScreen.updateLose(gameLogic.getHasLost());
         ui.updateUI(gameLogic.getPayout());
                 
@@ -174,5 +197,7 @@ public class GameLayout extends StackPane
         player.move(startPosX, startPosY, 0, false);
         bridgePane.resetRoundNum();
         updateAll();
+        backgroundMusic.stop();
+        backgroundMusic.play(0.2);
     }
 }

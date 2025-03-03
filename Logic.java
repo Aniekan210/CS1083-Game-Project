@@ -57,7 +57,7 @@ public class Logic
         start = true;
     }
     
-    public void setStart()
+    public void start()
     {
         start = false;
     }
@@ -69,4 +69,5 @@ public class Logic
     public int getRoundPayout() { return payouts[roundNo-1]; }
     public boolean getHasLost() { return hasLost; }
     public boolean getHasWon() { return hasWon; }
+    public boolean getStart() { return start; }
 }

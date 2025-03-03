@@ -8,6 +8,8 @@ import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.util.Duration;
+import javafx.scene.media.AudioClip;
+
 /**********************************************
  * The screen output for anyone who loses
  *
@@ -20,13 +22,15 @@ public class LoseScreen extends StackPane
     protected Rectangle overlay;
     protected Button resetButton;
     protected Timeline timeline;
+    protected AudioClip backgroundMusic;
     
-    public LoseScreen(double width, double height, EventHandler<MouseEvent> event)
+    public LoseScreen(double width, double height, AudioClip backgroundMusic)
     {
         super();
         this.setPrefWidth(width);
         this.setPrefHeight(height);
         this.setPickOnBounds(false);
+        this.backgroundMusic = backgroundMusic;
         
         timeline = new Timeline();
 
@@ -34,13 +38,8 @@ public class LoseScreen extends StackPane
         overlay = new Rectangle(width, height, Color.BLACK);
         overlay.setOpacity(0);
         overlay.setMouseTransparent(true);
-
-        //make Reset button to start the game from the beginning 
-        resetButton = new Button("PLAY AGAIN");
-        resetButton.setOnMouseClicked(event);
-        resetButton.setVisible(false);
         
-        this.getChildren().addAll(overlay, resetButton);
+        this.getChildren().addAll(overlay);
     }
     
     public void updateLose(boolean hasLost)
@@ -51,17 +50,16 @@ public class LoseScreen extends StackPane
             
             KeyFrame nothing = new KeyFrame(Duration.millis(650), new KeyValue(overlay.opacityProperty(), 0));
             KeyFrame opacityUp = new KeyFrame(Duration.millis(1200), new KeyValue(overlay.opacityProperty(), 1));
-            KeyFrame visible = new KeyFrame(Duration.millis(1200), e -> resetButton.setVisible(true));
+            KeyFrame stopMusic = new KeyFrame(Duration.millis(1200), e -> backgroundMusic.stop());
             overlay.setMouseTransparent(false);
             
-            timeline.getKeyFrames().addAll(nothing, opacityUp, visible);
+            timeline.getKeyFrames().addAll(nothing, opacityUp, stopMusic);
             timeline.play(); 
         }
         else
         {
             overlay.setOpacity(0);
             overlay.setMouseTransparent(true);
-            resetButton.setVisible(false);
         }
     }
 }

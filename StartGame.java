@@ -3,6 +3,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
 
 /***************************************************
  * this class starts up the game
@@ -12,6 +13,8 @@ import javafx.scene.image.Image;
  ***************************************************/
 public class StartGame extends Application
 {
+    private AudioClip backgroundMusic;
+    
     @Override
     public void start(Stage stage)
     {
@@ -21,12 +24,14 @@ public class StartGame extends Application
         // PLEASE DO NOT CHANGE THESE VALUES!!!!!!!
         double width = 750;
         double height = 600;
+        backgroundMusic = new AudioClip("file:assets/sounds/background.mp3");
+        
         
         // Create Game Logic
-        GameLayout layout = new GameLayout(width, height);
+        GameLayout layout = new GameLayout(width, height, backgroundMusic);
         
         pane.getChildren().add(layout);
-        
+         
         Image icon = new Image("./assets/images/icon.png");
         Scene scene = new Scene(pane, width, height);
         stage.setTitle("Tread Lightly");
@@ -36,5 +41,11 @@ public class StartGame extends Application
 
         // Show the Stage (window)
         stage.show();
+    }
+    
+    @Override
+    public void stop()
+    {
+        backgroundMusic.stop();
     }
 }
