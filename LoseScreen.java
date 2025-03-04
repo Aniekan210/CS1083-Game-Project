@@ -20,7 +20,6 @@ import javafx.scene.image.Image;
  *********************************************/
 public class LoseScreen extends StackPane
 {
-    //Instance data
     protected Rectangle overlay;
     protected ImageView character;
     protected Pane animationPane;

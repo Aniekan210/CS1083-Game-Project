@@ -25,7 +25,7 @@ public class StartGame extends Application
         double width = 750;
         double height = 600;
         backgroundMusic = new AudioClip("file:assets/sounds/background.mp3");
-        
+        backgroundMusic.setVolume(0.2);
         
         // Create Game Logic
         GameLayout layout = new GameLayout(width, height, backgroundMusic);

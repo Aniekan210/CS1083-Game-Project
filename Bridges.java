@@ -57,7 +57,6 @@ public class Bridges extends StackPane
                 glassPerRow = 4;
                 //scale of each of the 3 glass tiles
                 scale = new double[]{0.5,0.5,0.5};
-                //distance the player moves(upward kind of)
                 movement = new double[]{-70, -75, -60};
                 spacing = -10;
                 vBucksChance = 0;
@@ -65,17 +64,17 @@ public class Bridges extends StackPane
                 
             case 2:
                 glassPerRow = 3;
-                scale = new double[]{1.22,1,0.83};
-                movement = new double[]{-80, -10, 70};
-                spacing = -53;
+                scale = new double[]{1.02,0.85,0.7};
+                movement = new double[]{-74, -20, 41};
+                spacing = -28;
                 vBucksChance = 0;
-                translate = 0;
+                translate = -1.5;
                 break;
             case 3:
                 glassPerRow = 2;
                 scale = new double[]{1.42,1.12,0.87};
-                movement = new double[]{-65, -38, 10};
-                spacing = -35;
+                movement = new double[]{-64, -38, 10};
+                spacing = -33;
                 vBucksChance = 0;
                 translate = -5.4;
                 break;
@@ -125,7 +124,7 @@ public class Bridges extends StackPane
                 ArrayList<Tile> tileRow = new ArrayList<Tile>();
                 for(int j=0; j<glassPerRow; j++)
                 {
-                    int payout = 1;
+                    int payout = 0;
                     double breakRisk = 0;
                     if (gen.nextDouble() < vBucksChance)
                     {
@@ -140,7 +139,7 @@ public class Bridges extends StackPane
                 }
                 
                 // generate a tile that will break and add it to the row
-                int payout = 0;
+                int payout = 1;
                 if (gen.nextDouble() < vBucksChance)
                 {
                     payout = (gen.nextInt(50) + 50)/10 * 10;

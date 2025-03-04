@@ -26,6 +26,7 @@ public class GameLayout extends StackPane
     protected Bridges bridgePane;
     protected UILayer ui;
     protected LoseScreen gameOverScreen;
+    protected ContinueScreen continueScreen;
     protected StartScreen start;
     protected double width;
     protected double height;
@@ -45,7 +46,7 @@ public class GameLayout extends StackPane
         
         this.backgroundMusic = backgroundMusic;
         this.backgroundMusic.setCycleCount(AudioClip.INDEFINITE);
-        this.backgroundMusic.play(0.2);
+        this.backgroundMusic.play();
         
         this.width = width;
         this.height = height;
@@ -108,8 +109,7 @@ public class GameLayout extends StackPane
                         }
                         else
                         {
-                            // update the rowNum
-                            gameLogic.incRowNum();
+                            timeline.getKeyFrames().clear();
                             
                             // check how many vbucks it has and add it to the payout
                             int payout = clicked.getPayout();
@@ -117,28 +117,29 @@ public class GameLayout extends StackPane
                             {
                                 gameLogic.addPayout(payout);
                                 
-                                // update the image of the tile
-                                timeline.getKeyFrames().clear();
                                 KeyFrame setBroke = new KeyFrame(Duration.millis(600), frame -> {
                                     clicked.setImage("regular");
                                     clicked.playMoney();
-                                    bridgePane.revealRows(gameLogic.getRowNum());
                                 });
                                 timeline.getKeyFrames().add(setBroke);
-                                timeline.play();
                             }
+                            
+                            KeyFrame reveal = new KeyFrame(Duration.millis(600), frame -> {
+                                bridgePane.revealRows(gameLogic.getRowNum());
+                            });
+                            timeline.getKeyFrames().add(reveal);
+                            timeline.play();
+
+                            // update the rowNum
+                            gameLogic.incRowNum();
                         }
                     }
                     
                     if(gameLogic.getRowNum() == 3)
                     {
-                        //gameLogic.addPayout(gameLogic.getRoundPayout());
+                        gameLogic.setWonRound(true);
                     }
-                    if(gameLogic.getRowNum() == 3 && gameLogic.getRoundNum() == 3)
-                    {
-                        //gameLogic.win();
-                    } 
-                    // Update the rest of the game
+                     // Update the rest of the game
                     updateAll();
                 }
             }
@@ -156,6 +157,30 @@ public class GameLayout extends StackPane
         
         gameOverScreen = new LoseScreen(width, height, backgroundMusic);
         
+        EventHandler<MouseEvent> clickCont = new EventHandler<MouseEvent>() 
+        {
+            @Override
+            public void handle(MouseEvent e) 
+            {
+                continueScreen.flash();
+                gameLogic.addPayout(gameLogic.getRoundPayout());
+                gameLogic.incRoundNum();
+                gameLogic.setWonRound(false);
+                player.move(startPosX, startPosY, 0, false);
+                updateAll();
+            }
+        };
+        
+        EventHandler<MouseEvent> clickStop = new EventHandler<MouseEvent>() 
+        {
+            @Override
+            public void handle(MouseEvent e) 
+            {
+                reset();
+            }
+        };
+        continueScreen = new ContinueScreen(width, height, backgroundMusic, clickCont, clickStop);
+        
         ResetBtn rst = new ResetBtn(width, height,
             new EventHandler<MouseEvent>() 
             {
@@ -165,7 +190,7 @@ public class GameLayout extends StackPane
                     reset();
                 }
             }
-        ); 
+        );
         
         start = new StartScreen(width, height,
             new EventHandler<MouseEvent>() 
@@ -179,13 +204,14 @@ public class GameLayout extends StackPane
             }
         ); 
         
-        this.getChildren().addAll(ui, gameOverScreen, rst, start);        
+        this.getChildren().addAll(ui, gameOverScreen, continueScreen, rst, start);        
     }
      
     private void updateAll()
     {
         start.updateStart(gameLogic.getStart());
         gameOverScreen.updateLose(gameLogic.getHasLost());
+        continueScreen.updateContinue(gameLogic.getWonRound(), gameLogic.getRoundNum());
         ui.updateUI(gameLogic.getPayout());
                 
         // add 

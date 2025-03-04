@@ -19,7 +19,6 @@ public class Tile extends ImageView
     protected AudioClip brokenSound;
     protected AudioClip moneySound;
 
-
     public Tile(int roundNum, int rowNum, int rowPos, int pay, double breakRisk) 
     {
         super();
