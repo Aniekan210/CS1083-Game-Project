@@ -138,4 +138,10 @@ public class NameInput extends Pane
     {
         return input.getText();
     }
+
+    public void clear()
+    {
+          // Clear the text field when the image is clicked
+            input.clear();
+    }
 }
