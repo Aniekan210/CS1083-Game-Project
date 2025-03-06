@@ -18,7 +18,11 @@ public class ResetBtn extends Pane
         this.setPrefHeight(height);
         this.setPickOnBounds(false);
         
-        ImageView reset = new ImageView(new Image("./assets/images/reset_button.png"));
+        Image resetDefault = new Image("./assets/images/reset_button.png");
+        Image resetHovered = new Image("./assets/images/reset_hovered.png");
+        ImageView reset = new ImageView(resetDefault);
+        reset.setOnMouseEntered(e -> reset.setImage(resetHovered));
+        reset.setOnMouseExited(e -> reset.setImage(resetDefault));
         reset.setOnMouseClicked(event);
         reset.setFitHeight(70);
         reset.setPreserveRatio(true);

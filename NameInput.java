@@ -141,7 +141,7 @@ public class NameInput extends Pane
 
     public void clear()
     {
-          // Clear the text field when the image is clicked
-            input.clear();
+        // Clear the text field when the image is clicked
+        input.clear();
     }
 }

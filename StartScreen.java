@@ -33,14 +33,31 @@ public class StartScreen extends StackPane
         logo.setLayoutX(width/2 - 225);
         logo.setLayoutY(75);
         
-        ImageView startBtn = new ImageView(new Image("./assets/images/start_button.png"));
-        startBtn.setFitWidth(220);
+        double buttonWidth = 250;
+        
+        Image startDefault = new Image("./assets/images/start_button.png");
+        Image startHovered = new Image("./assets/images/start_hovered.png");
+        ImageView startBtn = new ImageView(startDefault);
+        startBtn.setOnMouseEntered(e -> startBtn.setImage(startHovered));
+        startBtn.setOnMouseExited(e -> startBtn.setImage(startDefault));
+        startBtn.setFitWidth(buttonWidth);
         startBtn.setPreserveRatio(true);
-        startBtn.setLayoutX(width/2 - 110);
-        startBtn.setLayoutY(height - 200);
+        startBtn.setLayoutX(width/2 - buttonWidth/2);
+        startBtn.setLayoutY(height - 270);
         startBtn.setOnMouseClicked(event);
         
-        container.getChildren().addAll(logo, startBtn);
+        Image leaderDefault = new Image("./assets/images/leaderboard_default.png");
+        Image leaderHovered = new Image("./assets/images/leaderboard_hovered.png");
+        ImageView leader = new ImageView(leaderDefault);
+        leader.setOnMouseEntered(e -> leader.setImage(leaderHovered));
+        leader.setOnMouseExited(e -> leader.setImage(leaderDefault));
+        leader.setFitWidth(buttonWidth);
+        leader.setPreserveRatio(true);
+        leader.setLayoutX(width/2 - buttonWidth/2);
+        leader.setLayoutY(height - 170);
+        leader.setOnMouseClicked(event); // will change this later
+        
+        container.getChildren().addAll(logo, startBtn, leader);
         this.getChildren().addAll(bg, container);
     }
     

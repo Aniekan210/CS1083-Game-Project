@@ -139,8 +139,8 @@ public class GameLayout extends StackPane
                     
                     if(gameLogic.getRowNum() == 3)
                     {
-                        gameLogic.setRowNum(2);
                         gameLogic.setWonRound(true);
+                        gameLogic.setRowNum(2);
                     }
                      // Update the rest of the game
                     updateAll();
@@ -248,8 +248,6 @@ public class GameLayout extends StackPane
         gameOverScreen.updateLose(gameLogic.getHasLost());
         continueScreen.updateContinue(gameLogic.getWonRound(), gameLogic.getRoundNum(), gameLogic.getRoundPayout());
         ui.updateUI(gameLogic.getPayout());
-                
-        // add 
         bridgePane.updateBridge(gameLogic.getRoundNum(), gameLogic.getRoundPayout());
     }
     
