@@ -262,5 +262,6 @@ public class GameLayout extends StackPane
         updateAll();
         backgroundMusic.stop();
         backgroundMusic.play(0.2);
+        input.clear();
     }
 }
