@@ -28,6 +28,8 @@ public class GameLayout extends StackPane
     protected LoseScreen gameOverScreen;
     protected ContinueScreen continueScreen;
     protected StartScreen start;
+    protected EndScreen end;
+    protected NameInput input;
     protected double width;
     protected double height;
     protected double startPosX;
@@ -137,6 +139,7 @@ public class GameLayout extends StackPane
                     
                     if(gameLogic.getRowNum() == 3)
                     {
+                        gameLogic.setRowNum(2);
                         gameLogic.setWonRound(true);
                     }
                      // Update the rest of the game
@@ -176,10 +179,14 @@ public class GameLayout extends StackPane
             @Override
             public void handle(MouseEvent e) 
             {
-                reset();
+                gameLogic.win();
+                gameLogic.addPayout(gameLogic.getRoundPayout());
+                updateAll();
             }
         };
         continueScreen = new ContinueScreen(width, height, backgroundMusic, clickCont, clickStop);
+        
+        end = new EndScreen(width, height);
         
         ResetBtn rst = new ResetBtn(width, height,
             new EventHandler<MouseEvent>() 
@@ -192,26 +199,42 @@ public class GameLayout extends StackPane
             }
         );
         
+        
+        input = new NameInput(width, height,
+            new EventHandler<MouseEvent>() 
+            {
+                @Override
+                public void handle(MouseEvent e) 
+                {
+                    input.flash();          
+                    gameLogic.setName(input.getText());
+                    input.toggle();
+                    gameLogic.start();
+                    updateAll();
+                }
+            }
+        );
+                
         start = new StartScreen(width, height,
             new EventHandler<MouseEvent>() 
             {
                 @Override
                 public void handle(MouseEvent e) 
                 {
-                    gameLogic.start();
-                    updateAll();
+                    input.toggle();
                 }
             }
         ); 
         
-        this.getChildren().addAll(ui, gameOverScreen, continueScreen, rst, start);        
+        this.getChildren().addAll(ui, gameOverScreen, continueScreen, end, rst, start, input);        
     }
      
     private void updateAll()
     {
+        end.updateEnd(gameLogic.getHasWon(), gameLogic.getPayout());
         start.updateStart(gameLogic.getStart());
         gameOverScreen.updateLose(gameLogic.getHasLost());
-        continueScreen.updateContinue(gameLogic.getWonRound(), gameLogic.getRoundNum());
+        continueScreen.updateContinue(gameLogic.getWonRound(), gameLogic.getRoundNum(), gameLogic.getRoundPayout());
         ui.updateUI(gameLogic.getPayout());
                 
         // add 
@@ -220,6 +243,7 @@ public class GameLayout extends StackPane
     
     private void reset()
     {
+        gameLogic.save();
         gameLogic.reset();
         player.move(startPosX, startPosY, 0, false);
         bridgePane.resetRoundNum();

@@ -1,7 +1,6 @@
 import javafx.scene.layout.*;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -11,6 +10,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.Font;
 /**
  * Write a description of class ContinueScreen here.
  *
@@ -19,8 +20,9 @@ import javafx.scene.paint.Color;
  */
 public class ContinueScreen extends StackPane
 {
-    protected Rectangle bg;
+    protected ImageView bg;
     protected Rectangle flashBang;
+    protected Text payoutText;
     protected ImageView continueBtn;
     protected ImageView stopBtn;
     protected Image contDisabled;
@@ -54,17 +56,19 @@ public class ContinueScreen extends StackPane
         flashBang.setMouseTransparent(true);
         flashBang.setOpacity(0);
         
-        bg = new Rectangle(width, height, Color.BLACK);
+        bg = new ImageView(new Image("/assets/images/startBg.png"));
+        bg.setFitWidth(width);
+        bg.setFitHeight(height);
         bg.setOpacity(0);
         bg.setMouseTransparent(true);
         
         container =  new Pane();
-        container.setPrefWidth(width - 60);
-        container.setPrefHeight(height - 60);
+        container.setPrefWidth(width);
+        container.setPrefHeight(height);
         container.setOpacity(0);
         container.setMouseTransparent(true);
         
-        double buttonWidth = 200;
+        double buttonWidth = 250;
         contHovered = new Image("./assets/images/continue_hovered.png");
         contDefault = new Image("./assets/images/continue_default.png");
         contDisabled = new Image("./assets/images/continue_disabled.png");
@@ -72,7 +76,7 @@ public class ContinueScreen extends StackPane
         continueBtn.setFitWidth(buttonWidth);
         continueBtn.setPreserveRatio(true);
         continueBtn.setLayoutX(width/2 - buttonWidth/2);        
-        continueBtn.setLayoutY(height-60-continueBtn.getLayoutBounds().getHeight()-90);
+        continueBtn.setLayoutY(height-60-continueBtn.getLayoutBounds().getHeight()-95);
         
         stopHovered = new Image("./assets/images/stop_hovered.png");
         stopDefault = new Image("./assets/images/stop_default.png");
@@ -80,7 +84,7 @@ public class ContinueScreen extends StackPane
         stopBtn.setFitWidth(buttonWidth);
         stopBtn.setPreserveRatio(true);
         stopBtn.setLayoutX(width/2 - buttonWidth/2);        
-        stopBtn.setLayoutY(height-60-stopBtn.getLayoutBounds().getHeight()-20);
+        stopBtn.setLayoutY(height-60-stopBtn.getLayoutBounds().getHeight());
         
         setHoversAndClicks();
         
@@ -88,13 +92,24 @@ public class ContinueScreen extends StackPane
         winTitle.setFitWidth(450);
         winTitle.setPreserveRatio(true);
         winTitle.setLayoutX(width/2 - 225);
-        winTitle.setLayoutY(60+25);
-        container.getChildren().addAll(continueBtn, winTitle, stopBtn);
+        winTitle.setLayoutY(60);
+        
+        payoutText = new Text();
+        payoutText.setFont(Font.font("Comic Sans MS", 40));
+        payoutText.setFill(Color.WHITE);
+        payoutText.setStroke(Color.BLACK);
+        payoutText.setStrokeWidth(2.2);
+        payoutText.setLayoutY(325);
+        
+        container.getChildren().addAll(continueBtn, winTitle, stopBtn, payoutText);
         this.getChildren().addAll(bg, container, flashBang);
     }
     
-    public void updateContinue(boolean hasWonRound, int roundNum)
+    public void updateContinue(boolean hasWonRound, int roundNum, int reward)
     {   
+        String payout = String.format("AMOUNT WON: %d vBucks", reward);
+        payoutText.setText(payout);
+        payoutText.setLayoutX(width/2 - payoutText.getBoundsInLocal().getWidth()/2);
         if (roundNum == 3)
         {
             continueBtn.setImage(contDisabled);
@@ -111,14 +126,14 @@ public class ContinueScreen extends StackPane
             container.setMouseTransparent(false);
             timeline.getKeyFrames().clear();
             
-            KeyFrame nothing = new KeyFrame(Duration.millis(1200), new KeyValue(bg.opacityProperty(), 0));
+            KeyFrame nothing = new KeyFrame(Duration.millis(1000), new KeyValue(bg.opacityProperty(), 0));
             
-            KeyFrame stopAndStartMusic = new KeyFrame(Duration.millis(1200), e -> {
+            KeyFrame stopAndStartMusic = new KeyFrame(Duration.millis(1000), e -> {
                 backgroundMusic.stop();
                 winAudio.play();
             });
             
-            KeyFrame show = new KeyFrame(Duration.millis(1800), 
+            KeyFrame show = new KeyFrame(Duration.millis(1300), 
                                new KeyValue(bg.opacityProperty(), 1),
                                new KeyValue(container.opacityProperty(), 0)
             );
@@ -146,8 +161,8 @@ public class ContinueScreen extends StackPane
             winAudio.stop();
             backgroundMusic.play();
         });
-        KeyFrame flash = new KeyFrame(Duration.millis(300),new KeyValue(flashBang.opacityProperty(), 1));
-        KeyFrame dim = new KeyFrame(Duration.millis(2000),new KeyValue(flashBang.opacityProperty(), 0));
+        KeyFrame flash = new KeyFrame(Duration.millis(500),new KeyValue(flashBang.opacityProperty(), 1));
+        KeyFrame dim = new KeyFrame(Duration.millis(2800),new KeyValue(flashBang.opacityProperty(), 0));
         
         timeline.getKeyFrames().addAll(flash, dim, playMusic);
         timeline.play();

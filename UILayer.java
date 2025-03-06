@@ -1,5 +1,4 @@
 import javafx.scene.layout.*;
-import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.animation.Timeline;

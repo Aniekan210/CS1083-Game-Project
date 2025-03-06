@@ -1,3 +1,8 @@
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.FileWriter;
+import java.io.File;
+
 /***********************************************
  * This class is the brain of the entire game.
  *
@@ -8,6 +13,7 @@ public class Logic
 {
     protected int roundNo;
     protected int rowNo;
+    protected String name;
     protected boolean hasLost;
     protected boolean hasWon;
     protected int payout;
@@ -40,6 +46,7 @@ public class Logic
     public void lose()
     {
         hasLost = true;
+        payout = 0;
     }
     
     public void win()
@@ -54,9 +61,31 @@ public class Logic
         hasLost = false; // change to false
         hasWon = false;
         payout = 0;
-        payouts = new int[]{500, 600, 800};
-        start = true; // change to true
+        payouts = new int[]{300, 400, 600};
+        start = true;
         wonRound = false;
+    }
+    
+    public void save() 
+    {
+        String filename = "leaderboard.txt";
+        
+        File file = new File(filename);
+        int rowNum = rowNo + 1;
+
+        // Create the file if it doesn't exist
+        try {
+            file.createNewFile();
+            // Open the file in append mode and write data
+            try (PrintWriter out = new PrintWriter(new FileWriter(file, true))) {
+                out.println(name + " " + roundNo + " " + rowNum + " " + payout);
+            } catch (IOException e) {
+                System.err.println("Error saving player data: " + e.getMessage());
+            }
+
+        } catch (IOException e) {
+            System.err.println("An error occurred while creating the file: " + e.getMessage());
+        }
     }
     
     public void start()
@@ -67,6 +96,16 @@ public class Logic
     public void setWonRound(boolean value)
     {
         wonRound = value;
+    }
+    
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+    
+    public void setRowNum(int value)
+    {
+        rowNo = value;
     }
     
     // Accessor methods
