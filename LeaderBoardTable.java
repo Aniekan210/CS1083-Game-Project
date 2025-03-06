@@ -16,41 +16,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Comparator;
 
-public class LeadeBoard extends VBox {
-
-    // Player class with necessary properties and getters
-    public static class Player {
-        private final SimpleStringProperty name;
-        private final SimpleIntegerProperty roundNum;
-        private final SimpleIntegerProperty rowNum;
-        private final SimpleIntegerProperty vBucksWon;
-
-        public Player(String name, int roundNum, int rowNum, int vBucksWon) {
-            this.name = new SimpleStringProperty(name);
-            this.roundNum = new SimpleIntegerProperty(roundNum);
-            this.rowNum = new SimpleIntegerProperty(rowNum);
-            this.vBucksWon = new SimpleIntegerProperty(vBucksWon);
-        }
-
-        public String getName() {
-            return name.get();
-        }
-
-        public int getRoundNum() {
-            return roundNum.get();
-        }
-
-        public int getRowNum() {
-            return rowNum.get();
-        }
-
-        public int getVBucksWon() {
-            return vBucksWon.get();
-        }
-    }
-
-    //@Override
-    public void start(Stage primaryStage) {
+public class LeaderBoardTable extends VBox 
+{
+    public LeaderBoardTable(double width, double height)
+    {
+        this.setPrefHeight(height-50);
+        
         TableView<Player> table = new TableView<>();
 
         // Create columns
@@ -80,15 +51,10 @@ public class LeadeBoard extends VBox {
         );
 
         table.setItems(data);
-
-        VBox vbox = new VBox(table);
-        Scene scene = new Scene(vbox, 400, 300);
-
-        primaryStage.setTitle("Leaderboard");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        
+        this.getChildren().add(table);
     }
-
+    
     // Method to read leaderboard data from a text file
     private ObservableList<Player> loadLeaderboardData() {
         String filename = "leaderboard.txt";
@@ -110,4 +76,5 @@ public class LeadeBoard extends VBox {
         }
         return list;
     }
+    
 }
