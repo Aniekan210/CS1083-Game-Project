@@ -30,6 +30,7 @@ public class GameLayout extends StackPane
     protected StartScreen start;
     protected EndScreen end;
     protected NameInput input;
+    protected FlashBang flash;
     protected double width;
     protected double height;
     protected double startPosX;
@@ -57,6 +58,7 @@ public class GameLayout extends StackPane
         this.startPosY = height - 10;
         
         timeline = new Timeline();
+        flash = new FlashBang(width, height);
         
         drawBridgeAndPlayer();
         drawScreens();
@@ -107,6 +109,7 @@ public class GameLayout extends StackPane
                             timeline.play();
                         
                             // fail the player
+                            gameLogic.incRowNum();
                             gameLogic.lose();
                         }
                         else
@@ -126,22 +129,21 @@ public class GameLayout extends StackPane
                                 timeline.getKeyFrames().add(setBroke);
                             }
                             
-                            KeyFrame reveal = new KeyFrame(Duration.millis(600), frame -> {
-                                bridgePane.revealRows(gameLogic.getRowNum());
-                            });
-                            timeline.getKeyFrames().add(reveal);
-                            timeline.play();
-
                             // update the rowNum
                             gameLogic.incRowNum();
+                            if(gameLogic.getRowNum() == 3)
+                            {
+                                gameLogic.setWonRound(true);
+                            }
                         }
+                        
+                        KeyFrame reveal = new KeyFrame(Duration.millis(600), frame -> {
+                            bridgePane.revealRows(gameLogic.getRowNum());
+                        });
+                        timeline.getKeyFrames().add(reveal);
+                        timeline.play();
                     }
                     
-                    if(gameLogic.getRowNum() == 3)
-                    {
-                        gameLogic.setWonRound(true);
-                        gameLogic.setRowNum(2);
-                    }
                      // Update the rest of the game
                     updateAll();
                 }
@@ -165,7 +167,8 @@ public class GameLayout extends StackPane
             @Override
             public void handle(MouseEvent e) 
             {
-                continueScreen.flash();
+                flash.flash();
+                continueScreen.play();
                 gameLogic.addPayout(gameLogic.getRoundPayout());
                 gameLogic.incRoundNum();
                 gameLogic.setWonRound(false);
@@ -217,7 +220,7 @@ public class GameLayout extends StackPane
                     }
                     else
                     {
-                        input.flash();          
+                        flash.flash();          
                         gameLogic.setName(name);
                         input.toggle();
                         gameLogic.start();
@@ -238,7 +241,7 @@ public class GameLayout extends StackPane
             }
         ); 
         
-        this.getChildren().addAll(ui, gameOverScreen, continueScreen, end, rst, start, input);        
+        this.getChildren().addAll(ui, gameOverScreen, continueScreen, end, rst, start, input, flash);        
     }
      
     private void updateAll()

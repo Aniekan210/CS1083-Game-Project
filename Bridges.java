@@ -67,7 +67,7 @@ public class Bridges extends StackPane
                 scale = new double[]{1.02,0.85,0.7};
                 movement = new double[]{-74, -20, 41};
                 spacing = -28;
-                vBucksChance = 0;
+                vBucksChance = 0.33;
                 translate = -1.5;
                 break;
             case 3:
@@ -116,7 +116,6 @@ public class Bridges extends StackPane
             
             //Make container for glass rows
             VBox glassContainer = new VBox();
-            
             // Make glass rows
             for (int i=3; i>0; i--)
             {
@@ -124,13 +123,13 @@ public class Bridges extends StackPane
                 ArrayList<Tile> tileRow = new ArrayList<Tile>();
                 for(int j=0; j<glassPerRow; j++)
                 {
-                    int payout = 1;
+                    int payout = 0;
                     double breakRisk = 0;
                     if (gen.nextDouble() < vBucksChance)
                     {
                         // change the breakrisk after getting broken tiles
-                        breakRisk = 0.2; 
-                        payout = gen.nextInt(50) + 50;
+                        breakRisk = 0.33; 
+                        payout = (gen.nextInt(50) + 50)/10 * 10;
                     }
                     //make a regular tile
                     Tile current = new Tile(roundNum, i-1, j, payout, breakRisk);
@@ -189,7 +188,7 @@ public class Bridges extends StackPane
     public void revealRows(int rowNum)
     {
         int totalRows = tiles.size();
-        for (int i=totalRows-rowNum; i<totalRows; i++)
+        for (int i = totalRows - rowNum; i < totalRows; i++)
         {
             ArrayList<Tile> tileRow = tiles.get(i);
             for (int j=0; j<tileRow.size(); j++)

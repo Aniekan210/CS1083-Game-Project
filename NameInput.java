@@ -123,17 +123,6 @@ public class NameInput extends Pane
         }
     }
     
-    public void flash()
-    {
-        timeline.getKeyFrames().clear();
-        
-        KeyFrame flash = new KeyFrame(Duration.millis(200),new KeyValue(flashBang.opacityProperty(), 1));
-        KeyFrame dim = new KeyFrame(Duration.millis(800),new KeyValue(flashBang.opacityProperty(), 0));
-        
-        timeline.getKeyFrames().addAll(flash, dim);
-        timeline.play();
-    }
-    
     public String getText()
     {
         return input.getText();

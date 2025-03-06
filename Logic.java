@@ -71,14 +71,13 @@ public class Logic
         String filename = "leaderboard.txt";
         
         File file = new File(filename);
-        int rowNum = rowNo + 1;
 
         // Create the file if it doesn't exist
         try {
             file.createNewFile();
             // Open the file in append mode and write data
             try (PrintWriter out = new PrintWriter(new FileWriter(file, true))) {
-                out.println(name + " " + roundNo + " " + rowNum + " " + payout);
+                out.println(name + " " + roundNo + " " + rowNo + " " + payout);
             } catch (IOException e) {
                 System.err.println("Error saving player data: " + e.getMessage());
             }
@@ -101,11 +100,6 @@ public class Logic
     public void setName(String name)
     {
         this.name = name;
-    }
-    
-    public void setRowNum(int value)
-    {
-        rowNo = value;
     }
     
     // Accessor methods

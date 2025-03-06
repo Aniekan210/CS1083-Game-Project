@@ -21,7 +21,6 @@ import javafx.scene.text.Font;
 public class ContinueScreen extends StackPane
 {
     protected ImageView bg;
-    protected Rectangle flashBang;
     protected Text payoutText;
     protected ImageView continueBtn;
     protected ImageView stopBtn;
@@ -51,11 +50,7 @@ public class ContinueScreen extends StackPane
         this.clickStop = clickStop;
         timeline = new Timeline();
         winAudio = new AudioClip("file:assets/sounds/win.mp3");
-        
-        flashBang = new Rectangle(width, height, Color.WHITE);
-        flashBang.setMouseTransparent(true);
-        flashBang.setOpacity(0);
-        
+
         bg = new ImageView(new Image("/assets/images/startBg.png"));
         bg.setFitWidth(width);
         bg.setFitHeight(height);
@@ -102,7 +97,7 @@ public class ContinueScreen extends StackPane
         payoutText.setLayoutY(325);
         
         container.getChildren().addAll(continueBtn, winTitle, stopBtn, payoutText);
-        this.getChildren().addAll(bg, container, flashBang);
+        this.getChildren().addAll(bg, container);
     }
     
     public void updateContinue(boolean hasWonRound, int roundNum, int reward)
@@ -126,19 +121,19 @@ public class ContinueScreen extends StackPane
             container.setMouseTransparent(false);
             timeline.getKeyFrames().clear();
             
-            KeyFrame nothing = new KeyFrame(Duration.millis(1000), new KeyValue(bg.opacityProperty(), 0));
+            KeyFrame nothing = new KeyFrame(Duration.millis(1300), new KeyValue(bg.opacityProperty(), 0));
             
-            KeyFrame stopAndStartMusic = new KeyFrame(Duration.millis(1000), e -> {
+            KeyFrame stopAndStartMusic = new KeyFrame(Duration.millis(1300), e -> {
                 backgroundMusic.stop();
                 winAudio.play();
             });
             
-            KeyFrame show = new KeyFrame(Duration.millis(1300), 
+            KeyFrame show = new KeyFrame(Duration.millis(1600), 
                                new KeyValue(bg.opacityProperty(), 1),
                                new KeyValue(container.opacityProperty(), 0)
             );
             
-            KeyFrame showUI = new KeyFrame(Duration.millis(2000), new KeyValue(container.opacityProperty(), 1));
+            KeyFrame showUI = new KeyFrame(Duration.millis(2300), new KeyValue(container.opacityProperty(), 1));
 
             
             timeline.getKeyFrames().addAll(nothing, stopAndStartMusic, show, showUI);
@@ -153,7 +148,7 @@ public class ContinueScreen extends StackPane
         }
     }
     
-    public void flash()
+    public void play()
     {
         timeline.getKeyFrames().clear();
         
@@ -161,10 +156,8 @@ public class ContinueScreen extends StackPane
             winAudio.stop();
             backgroundMusic.play();
         });
-        KeyFrame flash = new KeyFrame(Duration.millis(500),new KeyValue(flashBang.opacityProperty(), 1));
-        KeyFrame dim = new KeyFrame(Duration.millis(2800),new KeyValue(flashBang.opacityProperty(), 0));
         
-        timeline.getKeyFrames().addAll(flash, dim, playMusic);
+        timeline.getKeyFrames().add(playMusic);
         timeline.play();
     }
     
