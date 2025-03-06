@@ -206,11 +206,23 @@ public class GameLayout extends StackPane
                 @Override
                 public void handle(MouseEvent e) 
                 {
-                    input.flash();          
-                    gameLogic.setName(input.getText());
-                    input.toggle();
-                    gameLogic.start();
-                    updateAll();
+                    String name = input.getText().trim();
+                    boolean hasCharacters = !name.isEmpty();
+                    boolean hasSpaces = name.contains(" ");
+                    boolean emptyInput = name == null;
+                    
+                    if (!hasCharacters || hasSpaces || emptyInput)
+                    {
+                        
+                    }
+                    else
+                    {
+                        input.flash();          
+                        gameLogic.setName(name);
+                        input.toggle();
+                        gameLogic.start();
+                        updateAll();
+                    }
                 }
             }
         );
