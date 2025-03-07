@@ -1,25 +1,38 @@
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 
-/**
- * Write a description of class Player here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
 public class Player {
-    private final String name;
-    private final int roundNum;
-    private final int rowNum;
-    private final int vBucksWon;
+        public final SimpleIntegerProperty serialNumber;
+        private final SimpleStringProperty name;
+        private final SimpleIntegerProperty roundNum;
+        private final SimpleIntegerProperty rowNum;
+        private final SimpleIntegerProperty vBucksWon;
 
-    public Player(String name, int roundNum, int rowNum, int vBucksWon) {
-        this.name = name;
-        this.roundNum = roundNum;
-        this.rowNum = rowNum;
-        this.vBucksWon = vBucksWon;
+        public Player(int serialNumber, String name, int roundNum, int rowNum, int vBucksWon) {
+            this.serialNumber = new SimpleIntegerProperty(serialNumber);
+            this.name = new SimpleStringProperty(name);
+            this.roundNum = new SimpleIntegerProperty(roundNum);
+            this.rowNum = new SimpleIntegerProperty(rowNum);
+            this.vBucksWon = new SimpleIntegerProperty(vBucksWon);
+        }
+
+        public int getSerialNumber() {
+            return serialNumber.get();
+        }
+
+        public String getName() {
+            return name.get();
+        }
+
+        public int getRoundNum() {
+            return roundNum.get();
+        }
+
+        public int getRowNum() {
+            return rowNum.get();
+        }
+
+        public int getVBucksWon() {
+            return vBucksWon.get();
+        }
     }
-
-    public String getName() { return name; }
-    public int getRoundNum() { return roundNum; }
-    public int getRowNum() { return rowNum; }
-    public int getVBucksWon() { return vBucksWon; }
-}
