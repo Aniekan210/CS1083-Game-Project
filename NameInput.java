@@ -71,9 +71,9 @@ public class NameInput extends Pane
         Image okDefault = new Image("./assets/images/ok_button.png");
         Image okHovered = new Image("./assets/images/ok_hovered.png");
         okButton = new ImageView(okDefault);
-        okButton.setFitWidth(70);
+        okButton.setFitWidth(130);
         okButton.setPreserveRatio(true);
-        okButton.setLayoutX(width/2 - 35);
+        okButton.setLayoutX(width/2 - 65);
         okButton.setLayoutY(310);
         okButton.setOnMouseClicked(event);
         okButton.setOpacity(0);

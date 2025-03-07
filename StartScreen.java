@@ -18,10 +18,10 @@ public class StartScreen extends StackPane
         this.setVisible(true);
         this.setPickOnBounds(false);
         
-        ImageView bg = new ImageView(new Image("./assets/images/startBg.png"));
+        ImageView bg = new ImageView(new Image("./assets/images/mainBg.png"));
+        bg.setPreserveRatio(true);       
         bg.setFitWidth(width);
         bg.setFitHeight(height);
-        bg.setPreserveRatio(true);       
         
         Pane container = new Pane();
         container.setPrefWidth(width);
