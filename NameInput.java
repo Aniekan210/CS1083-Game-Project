@@ -68,13 +68,17 @@ public class NameInput extends Pane
         question.setLayoutY(240);
         question.setOpacity(0);
         
-        okButton = new ImageView(new Image("./assets/images/ok_button.png"));
+        Image okDefault = new Image("./assets/images/ok_button.png");
+        Image okHovered = new Image("./assets/images/ok_hovered.png");
+        okButton = new ImageView(okDefault);
         okButton.setFitWidth(70);
         okButton.setPreserveRatio(true);
         okButton.setLayoutX(width/2 - 35);
         okButton.setLayoutY(310);
         okButton.setOnMouseClicked(event);
         okButton.setOpacity(0);
+        okButton.setOnMouseEntered(e -> okButton.setImage(okHovered));
+        okButton.setOnMouseExited(e -> okButton.setImage(okDefault));
         
         this.getChildren().addAll(bg, input, okButton, question, flashBang);
     }

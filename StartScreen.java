@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
  */
 public class StartScreen extends StackPane
 {
+    protected LeaderboardScreen board;
     public StartScreen(double width, double height, EventHandler<MouseEvent> event)
     {
         super();
@@ -26,6 +27,8 @@ public class StartScreen extends StackPane
         container.setPrefWidth(width);
         container.setPrefHeight(height);
         container.setPickOnBounds(false);
+        
+        board = new LeaderboardScreen(width, height);
 
         ImageView logo = new ImageView(new Image("./assets/images/logo.png"));
         logo.setFitWidth(450);
@@ -55,16 +58,17 @@ public class StartScreen extends StackPane
         leader.setPreserveRatio(true);
         leader.setLayoutX(width/2 - buttonWidth/2);
         leader.setLayoutY(height - 170);
-        leader.setOnMouseClicked(event); // will change this later
+        leader.setOnMouseClicked(e -> board.toggle()); // will change this later
         
         container.getChildren().addAll(logo, startBtn, leader);
-        this.getChildren().addAll(bg, container);
+        this.getChildren().addAll(bg, container, board);
     }
     
     public void updateStart(boolean isStart)
     {
         if (isStart)
-        {            
+        {   
+            board.load();
             this.setVisible(true);
         }
         else
