@@ -128,7 +128,7 @@ public class Bridges extends StackPane
                     if (gen.nextDouble() < vBucksChance)
                     {
                         // change the breakrisk after getting broken tiles
-                        breakRisk = 0.33; 
+                        breakRisk = 0.1; 
                         payout = (gen.nextInt(50) + 50)/10 * 10;
                     }
                     //make a regular tile

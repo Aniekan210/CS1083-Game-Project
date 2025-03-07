@@ -45,10 +45,10 @@ public class LeaderboardScreen extends Pane
         container.setPrefHeight(height);
         
         Text title = new Text("Leaderboard");
-        title.setFont(Font.font("Comic Sans MS", 30));
+        title.setFont(Font.font("Comic Sans MS", 50));
         title.setFill(Color.WHITE);
         title.setStroke(Color.BLACK);
-        title.setStrokeWidth(1);
+        title.setStrokeWidth(2);
         
         table = new LeaderBoardTable(400,400);
         

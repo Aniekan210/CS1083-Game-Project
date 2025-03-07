@@ -131,16 +131,17 @@ public class GameLayout extends StackPane
                             
                             // update the rowNum
                             gameLogic.incRowNum();
+                            
+                            KeyFrame reveal = new KeyFrame(Duration.millis(600), frame -> {
+                                bridgePane.revealRows(gameLogic.getRowNum());
+                            });
+                            timeline.getKeyFrames().add(reveal);
+                            
                             if(gameLogic.getRowNum() == 3)
                             {
                                 gameLogic.setWonRound(true);
                             }
                         }
-                        
-                        KeyFrame reveal = new KeyFrame(Duration.millis(600), frame -> {
-                            bridgePane.revealRows(gameLogic.getRowNum());
-                        });
-                        timeline.getKeyFrames().add(reveal);
                         timeline.play();
                     }
                     

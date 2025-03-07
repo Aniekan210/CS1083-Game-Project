@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableCell;
 import javafx.util.Callback;
+import javafx.application.Platform;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -193,7 +194,7 @@ public class LeaderBoardTable extends VBox {
         roundColumn.setCellFactory(integerCellFactory);
         rowColumn.setCellFactory(integerCellFactory);
         vBucksColumn.setCellFactory(integerCellFactory);
-
+        
         // Scrollbar styling
         table.setStyle(
                 "-fx-background-color: white; " + // Set table background to white
@@ -203,19 +204,36 @@ public class LeaderBoardTable extends VBox {
                 "-fx-cell-size: 25px; " + // Set fixed cell height
                 "-fx-table-cell-border-color: black; " + // Add border to cells
                 "-fx-table-header-border-color: black; " + // Add border to headers
-                "-fx-scroll-bar-color: black; " + // Scrollbar color
-                "-fx-scroll-bar-thumb-color: white; " + // Scrollbar thumb color
-                "-fx-scroll-bar-track-color: black;" // Scrollbar track color
+                "-fx-scroll-bar-color: white; " + // Scrollbar track color
+                "-fx-scroll-bar-thumb-color: black;" // Scrollbar thumb color
         );
         
-        // Additional scrollbar styling
-        table.lookupAll(".scroll-bar:vertical").forEach(node -> {
-            node.setStyle(
-                    "-fx-background-color: black; " +
-                    "-fx-scroll-bar-color: black; " +
-                    "-fx-scroll-bar-thumb-color: white; " +
-                    "-fx-scroll-bar-track-color: black;"
-            );
+        // Ensure the styles are applied after the table is rendered
+        Platform.runLater(() -> {
+            // Additional scrollbar styling
+            table.lookupAll(".scroll-bar:vertical").forEach(node -> {
+                node.setStyle(
+                        "-fx-background-color: white; " + // Scrollbar track color
+                        "-fx-scroll-bar-color: white; " + // Scrollbar track color
+                        "-fx-scroll-bar-thumb-color: black; " + // Scrollbar thumb color
+                        "-fx-scroll-bar-track-color: white; " + // Scrollbar track color
+                        "-fx-pref-width: 4px; " + // Make the scrollbar very thin
+                        "-fx-min-width: 4px; " + // Ensure the minimum width is respected
+                        "-fx-max-width: 4px;" // Ensure the maximum width is respected
+                );
+            });
+        
+            // Style the scrollbar thumb (the draggable part)
+            table.lookupAll(".scroll-bar:vertical .thumb").forEach(node -> {
+                node.setStyle(
+                        "-fx-background-color: #575a1b; " + // Scrollbar thumb color
+                        "-fx-background-insets: 0, 1, 2; " +
+                        "-fx-background-radius: 2em; " + // Rounded corners for the thumb
+                        "-fx-pref-width: 4px; " + // Make the thumb very thin
+                        "-fx-min-width: 4px; " + // Ensure the minimum width is respected
+                        "-fx-max-width: 4px;" // Ensure the maximum width is respected
+                );
+            });
         });
     }
 }
