@@ -215,11 +215,7 @@ public class GameLayout extends StackPane
                     boolean hasSpaces = name.contains(" ");
                     boolean emptyInput = name == null;
                     
-                    if (!hasCharacters || hasSpaces || emptyInput)
-                    {
-                        
-                    }
-                    else
+                    if (hasCharacters && !hasSpaces && !emptyInput)
                     {
                         flash.flash();          
                         gameLogic.setName(name);

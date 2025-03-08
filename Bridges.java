@@ -67,7 +67,7 @@ public class Bridges extends StackPane
                 scale = new double[]{1.02,0.85,0.7};
                 movement = new double[]{-74, -20, 41};
                 spacing = -28;
-                vBucksChance = 0.33;
+                vBucksChance = 0.33;//change
                 translate = -1.5;
                 break;
             case 3:
@@ -138,7 +138,7 @@ public class Bridges extends StackPane
                 }
                 
                 // generate a tile that will break and add it to the row
-                int payout = 0;
+                int payout = 0;//change
                 if (gen.nextDouble() < vBucksChance)
                 {
                     payout = (gen.nextInt(50) + 50)/10 * 10;
