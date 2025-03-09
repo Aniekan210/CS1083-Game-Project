@@ -183,6 +183,7 @@ public class GameLayout extends StackPane
             @Override
             public void handle(MouseEvent e) 
             {
+                gameLogic.setWonRound(false);
                 gameLogic.win();
                 gameLogic.addPayout(gameLogic.getRoundPayout());
                 updateAll();
@@ -238,7 +239,7 @@ public class GameLayout extends StackPane
             }
         ); 
         
-        this.getChildren().addAll(ui, gameOverScreen, continueScreen, end, rst, start, input, flash);        
+        this.getChildren().addAll(ui, gameOverScreen, end, rst, continueScreen, start, input, flash);        
     }
      
     private void updateAll()
