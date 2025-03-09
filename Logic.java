@@ -56,7 +56,7 @@ public class Logic
     
     public void reset()
     {
-        roundNo = 2; // change to 1
+        roundNo = 1; // change to 1
         rowNo = 0;
         hasLost = false; // change to false
         hasWon = false;

@@ -40,7 +40,7 @@ public class Character extends ImageView
         jumpSound.setVolume(0.6);
         landSound.setVolume(0.2);
         
-        scales = new double[]{1, 0.92, 0.83};
+        scales = new double[]{1, 0.93, 0.86};
         originalW = this.getLayoutBounds().getWidth();
         originalH = this.getLayoutBounds().getHeight();
         

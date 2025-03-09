@@ -56,10 +56,11 @@ public class Bridges extends StackPane
             case 1:
                 glassPerRow = 4;
                 //scale of each of the 3 glass tiles
-                scale = new double[]{0.5,0.5,0.5};
-                movement = new double[]{-70, -75, -60};
-                spacing = -10;
-                vBucksChance = 0;
+                scale = new double[]{0.716, 0.57, 0.442};
+                movement = new double[]{-62, -20, 40};
+                spacing = -40;
+                vBucksChance = 0.4;
+                translate = 0;
                 break;
                 
             case 2:
@@ -67,7 +68,7 @@ public class Bridges extends StackPane
                 scale = new double[]{1.02,0.85,0.7};
                 movement = new double[]{-74, -20, 41};
                 spacing = -28;
-                vBucksChance = 0.33;//change
+                vBucksChance = 0.25;//change
                 translate = -1.5;
                 break;
             case 3:
@@ -138,7 +139,7 @@ public class Bridges extends StackPane
                 }
                 
                 // generate a tile that will break and add it to the row
-                int payout = 0;//change
+                int payout = 0;
                 if (gen.nextDouble() < vBucksChance)
                 {
                     payout = (gen.nextInt(50) + 50)/10 * 10;
