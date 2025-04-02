@@ -68,7 +68,7 @@ public class Logic
     
     public void save() 
     {
-        String filename = "leaderboard.txt";
+        String filename = "leaderboard.dat";
         
         File file = new File(filename);
 

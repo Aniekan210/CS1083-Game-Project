@@ -22,7 +22,8 @@ public class Bridges extends StackPane
     protected String bridgeUrl;
     protected double[] scale;
     protected double[] movement;
-    protected ArrayList<ArrayList<Tile>> tiles;
+    protected Tile[][] tiles;
+    protected int[] possiblePay;
     protected EventHandler<MouseEvent> event;
     protected Random gen;
     protected int roundNum;
@@ -31,20 +32,22 @@ public class Bridges extends StackPane
     protected double height;
     protected double vBucksChance;
     protected double translate;
+    protected double breakNum;
     
     public Bridges(double width, double height, int roundNum, int roundPay, EventHandler<MouseEvent> event)
     {   
-        // create bridge stack pane
         super();
         super.setPrefWidth(width);
         super.setPrefHeight(height);
         this.width = width;
         this.height = height;
-        tiles = new ArrayList<ArrayList<Tile>>();
         this.event = event;
         this.roundNum = 0;
-        gen = new Random();
         
+        gen = new Random();
+        // list of possibel amounts vBucks could have
+        possiblePay = new int[]{50, 100, 150};
+            
         updateBridge(roundNum, roundPay);
     }
     
@@ -59,7 +62,7 @@ public class Bridges extends StackPane
                 scale = new double[]{0.716, 0.57, 0.442};
                 movement = new double[]{-62, -20, 40};
                 spacing = -40;
-                vBucksChance = 0.4;
+                vBucksChance = 0.4;// change to 0.4
                 translate = 0;
                 break;
                 
@@ -68,7 +71,7 @@ public class Bridges extends StackPane
                 scale = new double[]{1.02,0.85,0.7};
                 movement = new double[]{-74, -20, 41};
                 spacing = -28;
-                vBucksChance = 0.25;//change
+                vBucksChance = 0.25;
                 translate = -1.5;
                 break;
             case 3:
@@ -89,25 +92,25 @@ public class Bridges extends StackPane
     {
         if(this.roundNum != roundNum)
         {
-            //remove all the tiles and Bridges
-            tiles.clear();
+            // Remove all the tiles and bridge if the round number has changed
+            tiles = new Tile[3][glassPerRow];
+            VBox glassContainer = new VBox();
             this.getChildren().clear();
-
-            //make a new bridge
+            
+            // Add background
+            // Add the background
             ImageView bg = new ImageView(new Image("./assets/images/bg.png"));
             bg.setFitHeight(height);
             bg.setFitWidth(width);
 
+            //Display amount of vBucks to win 
             Pane textPane = new Pane();
             textPane.setMouseTransparent(true);
-            
-            //Display amount of vBucks won 
             Text roundPayText = new Text("+"+roundPay);
             roundPayText.setFont(Font.font("Comic Sans MS", 28));
             roundPayText.setFill(Color.BLACK);
             roundPayText.setLayoutX(width/2 - roundPayText.getLayoutBounds().getWidth()/2 - 2);
             roundPayText.setLayoutY(137);
-            
             textPane.getChildren().add(roundPayText);
         
             // Make glass bridge bg
@@ -116,38 +119,37 @@ public class Bridges extends StackPane
             bridgeImg.setFitWidth(width);
             
             //Make container for glass rows
-            VBox glassContainer = new VBox();
-            // Make glass rows
             for (int i=3; i>0; i--)
             {
                 HBox glassRow = new HBox();   
-                ArrayList<Tile> tileRow = new ArrayList<Tile>();
+                Tile[] tileRow = new Tile[glassPerRow];
                 for(int j=0; j<glassPerRow; j++)
                 {
                     int payout = 0;
                     double breakRisk = 0;
                     if (gen.nextDouble() < vBucksChance)
                     {
-                        // change the breakrisk after getting broken tiles
-                        breakRisk = 0.1; 
-                        payout = (gen.nextInt(50) + 50)/10 * 10;
+                        int payIndex = gen.nextInt(possiblePay.length);
+                        payout = possiblePay[payIndex];
+                        breakRisk = 0.03; 
                     }
                     //make a regular tile
                     Tile current = new Tile(roundNum, i-1, j, payout, breakRisk);
-                    tileRow.add(current);
+                    tileRow[j] = current;
                     glassRow.getChildren().add(current);
                 }
                 
                 // generate a tile that will break and add it to the row
-                int payout = 0;
+                int payout = 0; //change to 0
                 if (gen.nextDouble() < vBucksChance)
                 {
-                    payout = (gen.nextInt(50) + 50)/10 * 10;
+                    int payIndex = gen.nextInt(possiblePay.length);
+                    payout = possiblePay[payIndex];
                 }
                 int randomIndex = gen.nextInt(glassPerRow);
                 Tile willBreak = new Tile(roundNum, i-1, randomIndex, payout, 1);
                 glassRow.getChildren().set(randomIndex, willBreak);
-                tileRow.set(randomIndex, willBreak);
+                tileRow[randomIndex] = willBreak;
                 
                 glassRow.setAlignment(Pos.BOTTOM_CENTER);
                 glassRow.setSpacing(spacing);
@@ -159,7 +161,7 @@ public class Bridges extends StackPane
                 
                 // Adjust spacing dynamically for a perspective effect
                 glassRow.setTranslateY(movement[i-1]);
-                tiles.add(tileRow);
+                tiles[i-1] = tileRow;
                 glassContainer.getChildren().add(glassRow);
             }
             glassContainer.setAlignment(Pos.BOTTOM_CENTER);
@@ -175,12 +177,12 @@ public class Bridges extends StackPane
     
     private void setFunctions()
     {
-        for (int i=0; i<tiles.size(); i++)
+        for (int i=0; i<tiles.length; i++)
         {
-            ArrayList<Tile> currentList = tiles.get(i);
-            for (int j=0; j<currentList.size(); j++)
+            Tile[] currentList = tiles[i];
+            for (int j=0; j<currentList.length; j++)
             {
-                Tile current = currentList.get(j);
+                Tile current = currentList[j];
                 current.setOnMouseClicked(event);
             }
         }
@@ -188,23 +190,18 @@ public class Bridges extends StackPane
     
     public void revealRows(int rowNum)
     {
-        int totalRows = tiles.size();
-        for (int i = totalRows - rowNum; i < totalRows; i++)
+        for (int i=0; i<rowNum; i++)
         {
-            ArrayList<Tile> tileRow = tiles.get(i);
-            for (int j=0; j<tileRow.size(); j++)
+            Tile[] currentList = tiles[i];
+            for (int j=0; j<currentList.length; j++)
             {
-                Tile current = tileRow.get(j);
-                if (current.getBreakRisk() == 1)
-                {
-                    current.setImage("broken");
-                }
+                Tile current = currentList[j];
+                current.reveal();
             }
         }
     }
     
-    
-    //Restart the gsme for the very beginning
+    // Helper method to handle the reset of the game
     public void resetRoundNum()
     {
         roundNum = 0;

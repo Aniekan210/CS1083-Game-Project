@@ -12,7 +12,7 @@ import javafx.util.Duration;
 import javafx.scene.media.AudioClip;
 
 /*******************************************
- *The is the setup and view of the game
+ * This is a class that controls the main window of the game
  *
  * @author Group Aniekan, Skye, Kings
  * @version Group project (Game)
@@ -43,33 +43,36 @@ public class GameLayout extends StackPane
         super();
         this.setPrefWidth(width);
         this.setPrefHeight(height);
+        
+        timeline = new Timeline();
         gen = new Random();
         gameLogic = new Logic();
         player = new Character();
+        flash = new FlashBang(width, height);
+        
+        this.width = width;
+        this.height = height;
+        this.startPosX = width/2;
+        this.startPosY = height - 10;
         
         this.backgroundMusic = backgroundMusic;
         this.backgroundMusic.setCycleCount(AudioClip.INDEFINITE);
         this.backgroundMusic.play();
-        
-        this.width = width;
-        this.height = height;
-        
-        this.startPosX = width/2;
-        this.startPosY = height - 10;
-        
-        timeline = new Timeline();
-        flash = new FlashBang(width, height);
-        
+                
         drawBridgeAndPlayer();
         drawScreens();
     }
     
+    
+    /*********************************************************
+     * A method to draw and add the bridge and player objects
+     *********************************************************/
     private void drawBridgeAndPlayer()
     {
         // Brdige and player container
         StackPane container = new StackPane();
         
-        // create player pane
+        // create the pane the player will move in and add the player
         Pane playerPane = new Pane();
         playerPane.setMouseTransparent(true);
         playerPane.setPrefWidth(width);
@@ -77,17 +80,19 @@ public class GameLayout extends StackPane
         playerPane.getChildren().add(player); 
         player.move(startPosX, startPosY, 0, false);
         
-        // create bride pane
+        // create the bridges
         bridgePane = new Bridges(width, height, gameLogic.getRoundNum(), gameLogic.getRoundPayout(), 
+        // function that runs on every glass pane click
             new EventHandler<MouseEvent>() 
             {
                 @Override
                 public void handle(MouseEvent e) 
                 {
-                    // On every button click
+                    timeline.getKeyFrames().clear();
+                    // get the tile
                     Tile clicked = (Tile) e.getSource();
                     
-                    // Check the position of the tile
+                    // allow the movement of the player if the row position of teh tile matches te logic row pos
                     boolean allowMovement = gameLogic.getRowNum() == clicked.getRowNum();
                     
                     if (allowMovement)
@@ -99,30 +104,25 @@ public class GameLayout extends StackPane
                         boolean isBroken = gen.nextDouble() < clicked.getBreakRisk();
                         if (isBroken)
                         {                            
-                            // update the tile image
-                            timeline.getKeyFrames().clear();
+                            // update the tile image and play glass breaking sound and fail the player
                             KeyFrame setBroke = new KeyFrame(Duration.millis(600), frame -> {
                                 clicked.setImage("broken");
                                 clicked.playBreak();
+                                gameLogic.incRowNum();
+                                gameLogic.lose();
+                                updateAll();
                             });
                             timeline.getKeyFrames().add(setBroke);
-                            timeline.play();
-                        
-                            // fail the player
-                            gameLogic.incRowNum();
-                            gameLogic.lose();
                         }
                         else
-                        {
-                            timeline.getKeyFrames().clear();
-                            
+                        {                            
                             // check how many vbucks it has and add it to the payout
                             int payout = clicked.getPayout();
                             if (payout != 0)
                             {
-                                gameLogic.addPayout(payout);
-                                
+                                // add the payout to teh logic and play the coins sound
                                 KeyFrame setBroke = new KeyFrame(Duration.millis(600), frame -> {
+                                    gameLogic.addPayout(payout);
                                     clicked.setImage("regular");
                                     clicked.playMoney();
                                 });
@@ -132,21 +132,23 @@ public class GameLayout extends StackPane
                             // update the rowNum
                             gameLogic.incRowNum();
                             
-                            KeyFrame reveal = new KeyFrame(Duration.millis(600), frame -> {
+                            // reveal the bad tiles on the row
+                            KeyFrame reveal = new KeyFrame(Duration.millis(602), frame -> {
+                                clicked.notReveal();
                                 bridgePane.revealRows(gameLogic.getRowNum());
+                                
+                                // if they have sucessfully moved to teh third row then the win that round
+                                if(gameLogic.getRowNum() == 3)
+                                {
+                                    gameLogic.setWonRound(true);
+                                    gameLogic.addPayout(gameLogic.getRoundPayout());
+                                }
+                                updateAll();
                             });
                             timeline.getKeyFrames().add(reveal);
-                            
-                            if(gameLogic.getRowNum() == 3)
-                            {
-                                gameLogic.setWonRound(true);
-                            }
                         }
                         timeline.play();
                     }
-                    
-                     // Update the rest of the game
-                    updateAll();
                 }
             }
         );
@@ -157,6 +159,9 @@ public class GameLayout extends StackPane
         this.getChildren().addAll(container);
     }
     
+    /*********************************************************************************
+     * A method to draw the various screens of the game and layers them on the window
+     *********************************************************************************/
     private void drawScreens()
     {
         ui = new UILayer(width, height);
@@ -169,11 +174,10 @@ public class GameLayout extends StackPane
             public void handle(MouseEvent e) 
             {
                 flash.flash();
+                player.move(startPosX, startPosY, 0, false);
                 continueScreen.play();
-                gameLogic.addPayout(gameLogic.getRoundPayout());
                 gameLogic.incRoundNum();
                 gameLogic.setWonRound(false);
-                player.move(startPosX, startPosY, 0, false);
                 updateAll();
             }
         };
@@ -185,7 +189,6 @@ public class GameLayout extends StackPane
             {
                 gameLogic.setWonRound(false);
                 gameLogic.win();
-                gameLogic.addPayout(gameLogic.getRoundPayout());
                 updateAll();
             }
         };
@@ -241,17 +244,24 @@ public class GameLayout extends StackPane
         
         this.getChildren().addAll(ui, gameOverScreen, end, rst, continueScreen, start, input, flash);        
     }
-     
+    
+    
+    /*************************************************************************
+     * A method to update all screens based off the current logic of the game
+     **************************************************************************/
     private void updateAll()
     {
         end.updateEnd(gameLogic.getHasWon(), gameLogic.getPayout());
         start.updateStart(gameLogic.getStart());
         gameOverScreen.updateLose(gameLogic.getHasLost());
-        continueScreen.updateContinue(gameLogic.getWonRound(), gameLogic.getRoundNum(), gameLogic.getRoundPayout());
+        continueScreen.updateContinue(gameLogic.getWonRound(), gameLogic.getRoundNum(), gameLogic.getPayout());
         ui.updateUI(gameLogic.getPayout());
         bridgePane.updateBridge(gameLogic.getRoundNum(), gameLogic.getRoundPayout());
     }
     
+    /*********************************************************
+     * A method to reset the game
+     *********************************************************/
     private void reset()
     {
         gameLogic.save();

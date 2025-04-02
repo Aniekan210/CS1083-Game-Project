@@ -68,7 +68,7 @@ public class LeaderBoardTable extends VBox {
 
     // Method to read leaderboard data from a text file
     private ObservableList<Player> loadLeaderboardData() {
-        String filename = "leaderboard.txt";
+        String filename = "leaderboard.dat";
         ObservableList<Player> list = FXCollections.observableArrayList();
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;

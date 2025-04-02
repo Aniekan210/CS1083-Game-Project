@@ -89,25 +89,25 @@ public class LoseScreen extends StackPane
             
             timeline.getKeyFrames().clear();
             
-            
-            KeyFrame nothing = new KeyFrame(Duration.millis(650), new KeyValue(overlay.opacityProperty(), 0));
-            KeyFrame opacityUp = new KeyFrame(Duration.millis(1200), new KeyValue(overlay.opacityProperty(), 1));
-            KeyFrame stopMusic = new KeyFrame(Duration.millis(1200), e -> backgroundMusic.stop());
+            int startTime = 0;
+            KeyFrame nothing = new KeyFrame(Duration.millis(startTime), new KeyValue(overlay.opacityProperty(), 0));
+            KeyFrame opacityUp = new KeyFrame(Duration.millis(startTime + 550), new KeyValue(overlay.opacityProperty(), 1));
+            KeyFrame stopMusic = new KeyFrame(Duration.millis(startTime + 550), e -> backgroundMusic.stop());
 
             // character animations
-            KeyFrame noFall = new KeyFrame(Duration.millis(1200), new KeyValue(character.translateYProperty(), -charHeight - 10));
-            KeyFrame playScream = new KeyFrame(Duration.millis(1200), e -> scream.play(1));
-            KeyFrame fall = new KeyFrame(Duration.millis(2000), new KeyValue(character.translateYProperty(), height + charHeight));
-            KeyFrame dissapear = new KeyFrame(Duration.millis(2000), e -> character.setOpacity(0));
-            KeyFrame goBack = new KeyFrame(Duration.millis(2100), new KeyValue(character.translateYProperty(), -charHeight - 10));
+            KeyFrame noFall = new KeyFrame(Duration.millis(startTime + 550), new KeyValue(character.translateYProperty(), -charHeight - 10));
+            KeyFrame playScream = new KeyFrame(Duration.millis(startTime + 550), e -> scream.play(1));
+            KeyFrame fall = new KeyFrame(Duration.millis(startTime + 1350), new KeyValue(character.translateYProperty(), height + charHeight));
+            KeyFrame dissapear = new KeyFrame(Duration.millis(startTime + 1350), e -> character.setOpacity(0));
+            KeyFrame goBack = new KeyFrame(Duration.millis(startTime + 1450), new KeyValue(character.translateYProperty(), -charHeight - 10));
             
             // title key frames
-            KeyFrame noShow = new KeyFrame(Duration.millis(2200), 
+            KeyFrame noShow = new KeyFrame(Duration.millis(startTime + 1550), 
                               new KeyValue(loseTitle.scaleXProperty(), 0),
                               new KeyValue(loseTitle.scaleYProperty(), 0)
             );
-            KeyFrame playLose = new KeyFrame(Duration.millis(2200), e -> lose.play(1));
-            KeyFrame show = new KeyFrame(Duration.millis(3200), 
+            KeyFrame playLose = new KeyFrame(Duration.millis(startTime + 1550), e -> lose.play(1));
+            KeyFrame show = new KeyFrame(Duration.millis(startTime + 2550), 
                               new KeyValue(loseTitle.scaleXProperty(), 1),
                               new KeyValue(loseTitle.scaleYProperty(), 1)
             );

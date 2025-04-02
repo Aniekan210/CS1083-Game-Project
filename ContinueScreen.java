@@ -120,20 +120,19 @@ public class ContinueScreen extends StackPane
             bg.setMouseTransparent(false);
             container.setMouseTransparent(false);
             timeline.getKeyFrames().clear();
-            
-            KeyFrame nothing = new KeyFrame(Duration.millis(1300), new KeyValue(bg.opacityProperty(), 0));
-            
-            KeyFrame stopAndStartMusic = new KeyFrame(Duration.millis(1300), e -> {
+            int startTime = 750;
+            KeyFrame nothing = new KeyFrame(Duration.millis(startTime), new KeyValue(bg.opacityProperty(), 0));
+            KeyFrame stopAndStartMusic = new KeyFrame(Duration.millis(startTime), e -> {
                 backgroundMusic.stop();
                 winAudio.play();
             });
             
-            KeyFrame show = new KeyFrame(Duration.millis(1600), 
+            KeyFrame show = new KeyFrame(Duration.millis(startTime+300), 
                                new KeyValue(bg.opacityProperty(), 1),
                                new KeyValue(container.opacityProperty(), 0)
             );
             
-            KeyFrame showUI = new KeyFrame(Duration.millis(2300), new KeyValue(container.opacityProperty(), 1));
+            KeyFrame showUI = new KeyFrame(Duration.millis(startTime+1000), new KeyValue(container.opacityProperty(), 1));
 
             
             timeline.getKeyFrames().addAll(nothing, stopAndStartMusic, show, showUI);
