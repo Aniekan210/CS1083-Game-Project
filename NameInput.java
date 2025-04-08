@@ -4,6 +4,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
+import javafx.scene.input.*;
 import javafx.animation.KeyValue;
 import javafx.util.Duration;
 import javafx.scene.image.ImageView;
@@ -58,6 +59,24 @@ public class NameInput extends Pane
         input.setLayoutX(width/2 - 150);
         input.setLayoutY(255);
         input.setOpacity(0);
+        input.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                // Create synthetic mouse event at center of ImageView
+                MouseEvent syntheticClick = new MouseEvent(
+                    MouseEvent.MOUSE_CLICKED,
+                    okButton.getBoundsInLocal().getWidth()/2,
+                    okButton.getBoundsInLocal().getHeight()/2,
+                    0, 0,
+                    MouseButton.PRIMARY,
+                    1,
+                    false, false, false, false,
+                    true, false, false, false,
+                    false, false,
+                    null
+                );
+                okButton.fireEvent(syntheticClick);
+            }
+        });
         
         question = new Text("What is your name?");
         question.setFont(Font.font("Comic Sans MS", 25));

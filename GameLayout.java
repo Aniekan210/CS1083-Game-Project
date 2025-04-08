@@ -133,7 +133,7 @@ public class GameLayout extends StackPane
                             gameLogic.incRowNum();
                             
                             // reveal the bad tiles on the row
-                            KeyFrame reveal = new KeyFrame(Duration.millis(602), frame -> {
+                            KeyFrame reveal = new KeyFrame(Duration.millis(600), frame -> {
                                 clicked.notReveal();
                                 bridgePane.revealRows(gameLogic.getRowNum());
                                 
